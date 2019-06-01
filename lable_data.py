@@ -1,17 +1,18 @@
 import csv
 import os
+import pandas as pd
 import numpy as np
 import cv2
+from utils.data import *
 
 def main():
-    data_path = "dataset/fer2013.csv"
-    with open(data_path) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            img = cv2.imdecode(np.array(row[1]), cv2.IMREAD_GRAYSCALE)
-            print(img)
-            cv2.imshow('img', img)
-            cv2.waitKey(3000)
+    data = prep_data()
 
+    img_raw = data[1][0]
+    print(img_raw)
+    img = cv2.cvtColor(img_raw, cv2.Color_BGR2GRAY)
+    cv2.imshow('image',img)
+    cv2.waitKey(0)
+    
 if __name__ == '__main__':
     main()
