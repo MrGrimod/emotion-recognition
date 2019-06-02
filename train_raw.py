@@ -1,4 +1,5 @@
-from keras.layers import Input, Dense, Convolution2D, MaxPooling2D, AveragePooling2D, ZeroPadding2D, Dropout, Flatten, merge, Reshape, Activation
+import keras
+from keras.layers import *
 from keras.models import Model
 from keras.regularizers import l2
 from keras.optimizers import SGD
@@ -8,9 +9,9 @@ from utils.data import *
 def main():
     data = prep_data()
 
-    model = VGG_16((48, 48,1), 7)
+    model = basic_cnn((48, 48,1), 7)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy')
+    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
     print('progressing data')
     x_train = []
@@ -27,7 +28,9 @@ def main():
 
     print('training model on raw data \r')
     print('Shape X: ', x_train.shape, ' Shape Y: ', y_train.shape)
-    model.fit(x_train, y_train, epochs=3)
+
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
+    model.fit(x_train, y_train, batch_size=30, epochs=50, callbacks=[tbCallBack])
 
 
 if __name__ == "__main__":
