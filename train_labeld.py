@@ -7,9 +7,9 @@ from cnn_model.models import *
 from utils.data import *
 
 def main():
-    data = np.load('dataset/training_data_labeld.npy')
+    data = prep_data()
 
-    model = basic_cnn((200, 200,1), 7)
+    model = basic_cnn((48, 48,1), 7)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
@@ -29,7 +29,7 @@ def main():
     print('training model on raw data \r')
     print('Shape X: ', x_train.shape, ' Shape Y: ', y_train.shape)
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./raw_training_tb', histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./labeld_training_tb', histogram_freq=0, write_graph=True, write_images=True)
     model.fit(x_train, y_train, batch_size=30, epochs=50, callbacks=[tbCallBack])
 
 
