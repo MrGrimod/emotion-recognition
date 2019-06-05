@@ -29,7 +29,7 @@ def main():
     print('training model on raw data \r')
     print('Shape X: ', x_train.shape, ' Shape Y: ', y_train.shape)
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./raw_training_tb', histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/raw_training_tb', histogram_freq=0, write_graph=True, write_images=True)
     model.fit(x_train, y_train, batch_size=30, epochs=5, callbacks=[tbCallBack])
     model.save_weights('dataset/train_raw_weights.h5')
 
