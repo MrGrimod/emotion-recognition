@@ -14,7 +14,10 @@ def load_data(path):
     (x_train, y_train), (x_test, y_test) = (training_data[0],training_data[1]), (test_data[0],test_data[1])
 
     img_rows, img_cols = data_obj['img_dim']['width'], data_obj['img_dim']['height']
-
+    x_train=np.array(x_train)
+    x_test=np.array(x_test)
+    print(x_train.shape)
+    print(x_test.shape)
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
     input_shape = (img_rows, img_cols, 1)

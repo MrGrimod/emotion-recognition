@@ -10,14 +10,17 @@ def main():
     x_train, y_train, x_test, y_test, input_shape = load_data('dataset/ck_dataset.pickle')
 
     x_final_train = detect_features(x_train)
+    print(np.array(x_final_train).shape)
 
     x_final_test = detect_features(x_test)
 
+    print(np.array(x_final_test).shape)
+
     with open('dataset/ck_dataset_labeld.pickle', 'wb') as f:
         pickle.dump({
-            "training_data"   : [ x_final_train, y_train],
+            "training_data"   : [  np.array(x_final_train),  np.array(y_train)],
             "validation_data" : [ [], []],
-            "test_data"       : [ x_final_test, y_test],
+            "test_data"       : [  np.array(x_final_test),  np.array(y_test)],
             "img_dim"         : {"width": x_final_train[0].shape[0], "height": x_final_train[0].shape[1]}
         }, f, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -27,10 +30,10 @@ def detect_features(x_data):
     eye_cascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
     mouth_cascade = cv2.CascadeClassifier('cascades/haarcascade_mouth.xml')
 
+    x_final = []
     print('Detecting data')
     for i in tqdm(range(len(x_data))):
         faces = face_cascade.detectMultiScale(x_data[i], 1.3, 5)
-        x_final = []
 
         eyes = eye_cascade.detectMultiScale(x_data[i])
         for (ex,ey,ew,eh) in eyes:
@@ -40,6 +43,7 @@ def detect_features(x_data):
             cv2.rectangle(x_data[i],(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
         x_final.append(x_data[i])
+
     return x_final
 
 if __name__ == '__main__':
