@@ -7,7 +7,7 @@ from tqdm import tqdm
 from utils.data import *
 
 def main():
-    x_train, y_train, x_test, y_test, input_shape = load_data('dataset/ck_dataset.pickle')
+    x_train, y_train, x_test, y_test, input_shape = load_data('dataset/ck_dataset.pickle', False)
 
     x_final_train = detect_features(x_train)
     print(np.array(x_final_train).shape)

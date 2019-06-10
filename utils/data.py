@@ -5,7 +5,7 @@ import pickle
 import cv2
 from keras.utils import to_categorical
 
-def load_data(path):
+def load_data(path, to_categorical_bool):
     #by https://github.com/mahakal/FacialEmotionRecognition
     with open(path, 'rb') as pickled_dataset:
         data_obj = pickle.load(pickled_dataset)
@@ -22,8 +22,9 @@ def load_data(path):
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
     input_shape = (img_rows, img_cols, 1)
 
-    y_train = to_categorical(y_train, 8)
-    y_test = to_categorical(y_test, 8)
+    if to_categorical_bool:
+        y_train = to_categorical(y_train, 8)
+        y_test = to_categorical(y_test, 8)
 
     # normalize and convert data to utf8
     x_train = normalize_conv_utf8(x_train)
