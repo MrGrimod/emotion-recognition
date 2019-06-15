@@ -6,11 +6,15 @@ The goal is to get an idea of the improvement done by datasets in which the imag
 
 - Download the dataset from [here](https://www.b-tu.de/en/graphic-systems/databases/the-large-mpi-facial-expression-database). (You don't need to download all sets)
 
+- Create the raw dataset by running
+      python create_dataset.py
+
 - Run label_data.py to create the labeled dataset
       python label_data.py
 
 - Train the data on raw and trained and compare the results
       python train_labeled/raw.py
+
 
 ## Requirements
 
