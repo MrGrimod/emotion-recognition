@@ -27,6 +27,7 @@ The goal is to get an idea of the improvement done by datasets in which the imag
 - keras
 - tensorflow
 - collections
+- sklearn
 
 ## Face recognition/ detection
 

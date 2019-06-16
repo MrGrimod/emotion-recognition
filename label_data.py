@@ -4,36 +4,39 @@ import numpy as np
 import dlib
 import pickle
 import cv2
+import glob
 from tqdm import tqdm
 from utils.data import *
 from imutils import face_utils
 from collections import OrderedDict
 
 def main():
-    x_train, y_train, x_test, y_test, input_shape = load_data('dataset/ck_dataset.pickle', False)
+    i = 0
+    for filename in glob.iglob('F:/emotions_detection/raw/**'):
+        i += 1
+        print(filename)
 
-    x_final_train = detect_features_cv_cascades(detect_features(x_train))
+        data = np.load(filename)
 
-    x_final_test = detect_features_cv_cascades(detect_features(x_test))
+        data_x = np.array([i for i in data[0]])
 
-    with open('dataset/ck_dataset_labeld.pickle', 'wb') as f:
-        pickle.dump({
-            "training_data"   : [  np.array(x_final_train),  np.array(y_train)],
-            "validation_data" : [ [], []],
-            "test_data"       : [  np.array(x_final_test),  np.array(y_test)],
-            "img_dim"         : {"width": x_final_train[0].shape[0], "height": x_final_train[0].shape[1]}
-        }, f, protocol=pickle.HIGHEST_PROTOCOL)
+        data_y = np.array([i for i in data[1]])
+
+        data_x_f = detect_features(data_x)
+
+        data_f = np.array([[data_x_f], data_y])
+
+        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data)
 
 def detect_features(x_data):
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('dataset/shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor('storage/shape_predictor_68_face_landmarks.dat')
 
     x_final = []
     print('Detecting data - using DLib')
     for i in tqdm(range(len(x_data))):
         img = x_data[i]
-        img = img[:,:,0]
 
         rects = detector(img, 0)
 
@@ -51,8 +54,10 @@ def detect_features(x_data):
         # cv2.imshow("Output", img)
         # cv2.waitKey(0)
         x_final.append(img)
+
     x_final = np.array(x_final)
-    return x_final.reshape(x_final.shape[0], 100, 100, 1)
+
+    return x_final
 
 def detect_features_cv_cascades(x_data):
 

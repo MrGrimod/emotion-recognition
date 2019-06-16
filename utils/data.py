@@ -3,30 +3,19 @@ import os
 import numpy as np
 import pickle
 import cv2
-from keras.utils import to_categorical
 
-def load_data(path, to_categorical_bool):
-    #by https://github.com/mahakal/FacialEmotionRecognition
+def load_data(path):
     with open(path, 'rb') as pickled_dataset:
         data_obj = pickle.load(pickled_dataset)
 
-    (training_data, validation_data, test_data) = data_obj['training_data'], data_obj['validation_data'], data_obj['test_data']
-    (x_train, y_train), (x_test, y_test) = (training_data[0],training_data[1]), (test_data[0],test_data[1])
+    training_data, validation_data = data_obj['training_data'], data_obj['validation_data']
+
+    (x_train, y_train), (x_test, y_test) = (training_data[0],training_data[1]), (validation_data[0],validation_data[1])
 
     img_rows, img_cols = data_obj['img_dim']['width'], data_obj['img_dim']['height']
-    x_train=np.array(x_train)
-    x_test=np.array(x_test)
-    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+
     input_shape = (img_rows, img_cols, 1)
 
-    if to_categorical_bool:
-        y_train = to_categorical(y_train, 8)
-        y_test = to_categorical(y_test, 8)
-
-    # normalize and convert data to utf8
-    x_train = normalize_conv_utf8(x_train)
-    x_test = normalize_conv_utf8(x_test)
 
     return x_train, y_train, x_test, y_test, input_shape
 
