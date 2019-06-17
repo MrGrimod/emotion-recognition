@@ -1,16 +1,29 @@
 import sys
+import glob
 from tqdm import tqdm
 sys.path.append("..")
 from utils.data import *
 
 def main():
-    x_train, y_train, x_test, y_test, input_shape = load_data('../dataset/ck_dataset_labeld.pickle', False)
-    x_train = normalize_conv_utf8(x_train)
-    for i in tqdm(range(len(x_train))):
-        img = x_train[i]
-        img = img[:,:,3]
-        cv2.imshow('IMG', x_train[i])
-        cv2.waitKey(0)
+    i = 0
+    for filename in glob.iglob('F:/emotions_detection/labeled/**'):
+        i += 1
+
+        print(filename)
+
+        data = np.load(filename)
+
+        print(data.shape)
+        
+        data_x = np.array([i for i in data[0]])
+
+        data_y = np.array([i for i in data[1]])
+
+        print(data_x.shape)
+
+        for i in tqdm(range(len(data_x))):
+            cv2.imshow('IMG', data_x[i])
+            cv2.waitKey(0)
 
 if __name__ == "__main__":
     main()

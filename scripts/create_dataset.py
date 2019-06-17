@@ -29,7 +29,7 @@ def main():
             if i >= 730:
                 c += 1
                 y = np.array(y)
-                x = np.array(x)[0, :, :, :]
+                x = np.array(x)
 
                 y = encoder.fit_transform(y)
 

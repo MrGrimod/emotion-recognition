@@ -24,6 +24,12 @@ def main():
 
         data_x_f = detect_features(data_x)
 
+        print('Data: ', data.shape)
+
+        print('Data X: ', data_x_f.shape)
+
+        print('Data Y: ', data_y.shape)
+
         data_f = np.array([[data_x_f], data_y])
 
         np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data)
@@ -35,11 +41,9 @@ def detect_features(x_data):
 
     x_final = []
     print('Detecting data - using DLib')
-    for i in tqdm(range(len(x_data))):
-        img = x_data[i]
-
+    for i in tqdm(range(len(x_data[0]))):
+        img = x_data[0][i]
         rects = detector(img, 0)
-
         for (i, rect) in enumerate(rects):
         	shape = predictor(img, rect)
         	shape = face_utils.shape_to_np(shape)
