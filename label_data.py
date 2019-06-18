@@ -14,6 +14,7 @@ def main():
     i = 0
     for filename in glob.iglob('F:/emotions_detection/raw/**'):
         i += 1
+
         print(filename)
 
         data = np.load(filename)
@@ -32,7 +33,7 @@ def main():
 
         data_f = np.array([[data_x_f], data_y])
 
-        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data)
+        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data_f)
 
 def detect_features(x_data):
 
