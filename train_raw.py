@@ -16,21 +16,13 @@ def main():
     print('training model on raw unlabeld data \r')
 
     tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/raw_training_tb', histogram_freq=0, write_graph=True, write_images=True)
-    gen = generate_batches(files='F:/emotions_detection/raw/**', batch_size=batch_size)
 
-    #model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=200, callbacks=[tbCallBack])
+    data_gen = generate_data_batches(files='F:/emotions_detection/raw/**', batch_size=batch_size)
 
-    # for data_batch in gen:
-    #     data_x = np.array([i for i in data_batch[0]])
-    #     data_y = np.array([i for i in data_batch[1]])
-    #     print(data_x.shape)
-    #     print(data_y.shape)
-    #     print(data_y[2])
-    #     cv2.imshow("Output", data_x[0])
-    #     cv2.waitKey(0)
+    val_data_gen =
 
-    model.fit_generator(gen, validation_steps=4, steps_per_epoch=20, epochs=2, verbose=1)
-    model.save_weights('dataset/train_raw_weights.h5')
+    model.fit_generator(gen, steps_per_epoch=20, epochs=2, verbose=1)
+    model.save_weights('storage/train_raw_weights.h5')
 
 if __name__ == "__main__":
     main()

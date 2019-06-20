@@ -25,9 +25,9 @@ def basic_cnn(input_s, output_shape):
     model.add(Flatten())
 
     #fully connected neural networks
-    model.add(Dense(1024, activation='relu'))
+    model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.2))
-    model.add(Dense(1024, activation='relu'))
+    model.add(Dense(128, activation='relu'))
     model.add(Dropout(0.2))
 
     model.add(Dense(output_shape, activation='softmax'))

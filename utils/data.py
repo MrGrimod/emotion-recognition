@@ -5,8 +5,9 @@ import pickle
 import cv2
 import glob
 from keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
 
-def generate_batches(files, batch_size):
+def generate_data_batches(files, batch_size):
     # files = 'F:/emotions_detection/raw/**'
     i = 0
     for filename in glob.iglob(files):
@@ -20,15 +21,25 @@ def generate_batches(files, batch_size):
         data_x = data_x[0, :, :, :]
         data_y = np.array([i for i in data[1]])
 
-        print('Data: ', data.shape)
-
-        print('Data X: ', data_x.shape)
-
-        print('Data Y: ', data_y.shape)
-
         for cbatch in range(0, data_x.shape[0], batch_size):
             yield (data_x[cbatch:(cbatch + batch_size),:,:,:], data_y[cbatch:(cbatch + batch_size)])
 
+def generate_val_data_batches(files, batch_size):
+    # files = 'F:/emotions_detection/raw/**'
+    i = 0
+    for filename in glob.iglob(files):
+        i += 1
+
+        print(filename)
+
+        data = np.load(filename)
+
+        data_x = np.array([i for i in data[0]])
+        data_x = data_x[0, :, :, :]
+        data_y = np.array([i for i in data[1]])
+
+        for cbatch in range(0, data_x.shape[0], batch_size):
+            yield (data_x[cbatch:(cbatch + batch_size),:,:,:], data_y[cbatch:(cbatch + batch_size)])
 
 def label_categorisation(data_y):
     agree =	["agree_considered", "agree_continue", "agree_pure", "agree_reluctant"]
