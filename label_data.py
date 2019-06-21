@@ -7,6 +7,7 @@ from cnn_model.models import *
 from utils.data import *
 
 def main():
+    epochs = 1
     batch_size = 30
     val_training_factor = 0.7
     files='F:/emotions_detection/labeled/**'
@@ -25,7 +26,7 @@ def main():
 
     train_batch_count, val_batch_count = get_data_metric(files, batch_size, val_training_factor)
 
-    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=2, verbose=1)
+    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1)
     model.save_weights('storage/train_labeled_weights.h5')
 
 

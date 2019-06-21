@@ -54,7 +54,7 @@ def generate_val_data_batches(files, batch_size, val_training_factor):
 
 def get_data_metric(files, batch_size, val_training_factor):
     i = 0
-    data_count = 0
+    batch_count = 0
     for filename in glob.iglob(files):
         i += 1
 
@@ -62,11 +62,11 @@ def get_data_metric(files, batch_size, val_training_factor):
         data_x = np.array([i for i in data[0]])
 
         for cbatch in range(0, data_x.shape[0], batch_size):
-            data_count += 1
-    batch_count = int(data_count/batch_size)
+            batch_count += 1
+
     train_batch_count = int(val_training_factor * batch_count)
     val_batch_count = batch_count - train_batch_count
-
+    
     return train_batch_count, val_batch_count
 
 def label_categorisation(data_y):
@@ -90,28 +90,28 @@ def label_categorisation(data_y):
         y = data_y[i]
         if y in agree:
             data_y[i] = 0
-            print('Label Encoder - Agree')
+            #print('Label Encoder - Agree')
         elif y in annoyed:
             data_y[i] = 2
-            print('Label Encoder - annoyed')
+            #print('Label Encoder - annoyed')
         elif y in i_did_not:
             data_y[i] = 3
-            print('Label Encoder - i_did_not')
+            #print('Label Encoder - i_did_not')
         elif y in negative:
             data_y[i] = 4
-            print('Label Encoder - negative')
+            #print('Label Encoder - negative')
         elif y in positive:
             data_y[i] = 5
-            print('Label Encoder - positive')
+            #print('Label Encoder - positive')
         elif y in fear:
             data_y[i] = 6
-            print('Label Encoder - fear')
+            #print('Label Encoder - fear')
         elif y in smiling:
             data_y[i] = 7
-            print('Label Encoder - smiling')
+            #print('Label Encoder - smiling')
         else:
             data_y[i] = 8
-            print('Label Encoder - Unknown')
+            #print('Label Encoder - Unknown')
 
     data_y = to_categorical(data_y, num_classes=9)
 

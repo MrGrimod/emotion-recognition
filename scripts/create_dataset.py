@@ -11,9 +11,9 @@ from tqdm import tqdm
 sys.path.append("..")
 from utils.data import *
 
-files_chunk_size = 10
 
 def main():
+    files_chunk_size = 60
     i = 0
     c = 0
     x = []
