@@ -1,39 +1,33 @@
-import csv
-import os
-import numpy as np
-import dlib
-import pickle
-import cv2
-import glob
-from tqdm import tqdm
+import keras
+from keras.layers import *
+from keras.models import Model
+from keras.regularizers import l2
+from keras.optimizers import SGD
+from cnn_model.models import *
 from utils.data import *
-from imutils import face_utils
-from collections import OrderedDict
 
 def main():
-    i = 0
-    for filename in glob.iglob('F:/emotions_detection/raw/**'):
-        i += 1
+    batch_size = 30
+    val_training_factor = 0.7
+    files='F:/emotions_detection/labeled/**'
 
-        print(filename)
+    model = basic_cnn((576, 768, 3), 9)
+    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 
-        data = np.load(filename)
+    print('training model on labeld data \r')
 
-        data_x = np.array([i for i in data[0]])
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/labeled_training_tb', histogram_freq=0, write_graph=True, write_images=True)
 
-        data_y = np.array([i for i in data[1]])
+    data_gen = generate_data_batches(files, batch_size, val_training_factor)
 
-        data_x_f = detect_features(data_x)
+    val_data_gen = generate_val_data_batches(files, batch_size, val_training_factor)
 
-        print('Data: ', data.shape)
+    train_batch_count, val_batch_count = get_data_metric(files, batch_size, val_training_factor)
 
-        print('Data X: ', data_x_f.shape)
+    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=2, verbose=1)
+    model.save_weights('storage/train_labeled_weights.h5')
 
-        print('Data Y: ', data_y.shape)
-
-        data_f = np.array([[data_x_f], data_y])
-
-        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data_f)
 
 def detect_features(x_data):
 

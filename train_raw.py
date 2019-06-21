@@ -8,6 +8,8 @@ from utils.data import *
 
 def main():
     batch_size = 30
+    val_training_factor = 0.7
+    files='F:/emotions_detection/raw/**'
 
     model = basic_cnn((576, 768, 3), 9)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
@@ -17,11 +19,13 @@ def main():
 
     tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/raw_training_tb', histogram_freq=0, write_graph=True, write_images=True)
 
-    data_gen = generate_data_batches(files='F:/emotions_detection/raw/**', batch_size=batch_size)
+    data_gen = generate_data_batches(files, batch_size, val_training_factor)
 
-    val_data_gen =
+    val_data_gen = generate_val_data_batches(files, batch_size, val_training_factor)
 
-    model.fit_generator(gen, steps_per_epoch=20, epochs=2, verbose=1)
+    train_batch_count, val_batch_count = get_data_metric(files, batch_size, val_training_factor)
+
+    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=2, verbose=1)
     model.save_weights('storage/train_raw_weights.h5')
 
 if __name__ == "__main__":
