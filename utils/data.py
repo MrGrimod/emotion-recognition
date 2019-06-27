@@ -11,50 +11,53 @@ def generate_data_batches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
     val_training_factor = 0.7
     i = 0
-    for filename in glob.iglob(files):
-        i += 1
+    while True:
+        for filename in glob.iglob(files):
+            i += 1
 
-        data = np.load(filename)
+            data = np.load(filename)
 
-        data_x = np.array([i for i in data[0]])
-        data_x = data_x[0, :, :, :]
-        data_y = np.array([i for i in data[1]])
+            data_x = np.array([i for i in data[0]])
+            data_x = data_x[0, :, :, :]
+            data_y = np.array([i for i in data[1]])
 
-        for cbatch in range(0, data_x.shape[0], batch_size):
-            batch_x = data_x[cbatch:(cbatch + batch_size),:,:,:]
-            batch_y = data_y[cbatch:(cbatch + batch_size)]
+            for cbatch in range(0, data_x.shape[0], batch_size):
+                batch_x = data_x[cbatch:(cbatch + batch_size),:,:,:]
+                batch_y = data_y[cbatch:(cbatch + batch_size)]
 
-            batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
-            batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
+                batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
+                batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
 
-            yield (batch_x_training, batch_y_training)
+                yield (batch_x_training, batch_y_training)
 
 def generate_val_data_batches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
     # val_training_factor = 0.7
     i = 0
-    for filename in glob.iglob(files):
-        i += 1
+    while True:
+        for filename in glob.iglob(files):
+            i += 1
 
-        data = np.load(filename)
+            data = np.load(filename)
 
-        data_x = np.array([i for i in data[0]])
-        data_x = data_x[0, :, :, :]
-        data_y = np.array([i for i in data[1]])
+            data_x = np.array([i for i in data[0]])
+            data_x = data_x[0, :, :, :]
+            data_y = np.array([i for i in data[1]])
 
-        for cbatch in range(0, data_x.shape[0], batch_size):
-            batch_x = data_x[cbatch:(cbatch + batch_size),:,:,:]
-            batch_y = data_y[cbatch:(cbatch + batch_size)]
+            for cbatch in range(0, data_x.shape[0], batch_size):
+                batch_x = data_x[cbatch:(cbatch + batch_size),:,:,:]
+                batch_y = data_y[cbatch:(cbatch + batch_size)]
 
-            batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
-            batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
+                batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
+                batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
 
-            yield (batch_x_val, batch_y_val)
+                yield (batch_x_val, batch_y_val)
 
 
 def get_data_metric(files, batch_size, val_training_factor):
     i = 0
     batch_count = 0
+
     for filename in glob.iglob(files):
         i += 1
 
@@ -66,7 +69,7 @@ def get_data_metric(files, batch_size, val_training_factor):
 
     train_batch_count = int(val_training_factor * batch_count)
     val_batch_count = batch_count - train_batch_count
-    
+
     return train_batch_count, val_batch_count
 
 def label_categorisation(data_y):

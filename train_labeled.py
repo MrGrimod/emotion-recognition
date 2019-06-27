@@ -12,9 +12,9 @@ def main():
     val_training_factor = 0.7
     files='F:/emotions_detection/labeled/**'
 
-    model = basic_cnn((576, 768, 3), 9)
+    model = VGG_16((576, 768, 3), 9)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
     print('training model on labeled data \r')
 
@@ -28,7 +28,7 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1)
+    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=tbCallBack)
     model.save_weights('storage/train_labeled_weights.h5')
 
 
