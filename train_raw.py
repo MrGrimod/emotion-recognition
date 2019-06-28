@@ -8,13 +8,13 @@ from utils.data import *
 
 def main():
     epochs = 30
-    batch_size = 15
+    batch_size = 1
     val_training_factor = 0.7
+    learning_rate = 0.01
     files='F:/emotions_detection/raw/**'
 
-    model = VGG_16((576, 768, 3), 9)
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+    model = VGG_16((256, 256, 3), 9)
+    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learning_rate), metrics=['accuracy'])
 
     print('training model on raw unlabeld data \r')
 
@@ -27,7 +27,7 @@ def main():
     train_batch_count, val_batch_count = get_data_metric(files, batch_size, val_training_factor)
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
-    
+
     model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1)
     model.save_weights('storage/train_raw_weights.h5')
 

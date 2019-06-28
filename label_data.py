@@ -12,7 +12,7 @@ def main():
     val_training_factor = 0.7
     files='F:/emotions_detection/labeled/**'
 
-    model = basic_cnn((576, 768, 3), 9)
+    model = basic_cnn((256, 256, 3), 9)
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
 

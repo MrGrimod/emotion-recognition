@@ -2,7 +2,7 @@ import keras
 from keras.layers import *
 from keras.models import Model
 from keras.regularizers import l2
-from keras.optimizers import SGD
+from keras.optimizers import Adam
 from cnn_model.models import *
 from utils.data import *
 
@@ -11,10 +11,11 @@ def main():
     batch_size = 15
     val_training_factor = 0.7
     files='F:/emotions_detection/labeled/**'
+    learning_rate=0.000000001
 
     model = VGG_16((576, 768, 3), 9)
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+
+    model.compile(optimizer=Adam(lr=learning_rate), loss='categorical_crossentropy', metrics=['accuracy'])
 
     print('training model on labeled data \r')
 
