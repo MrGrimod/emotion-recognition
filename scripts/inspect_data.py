@@ -6,7 +6,7 @@ from utils.data import *
 
 def main():
     i = 0
-    for filename in glob.iglob('F:/emotions_detection/raw/**'):
+    for filename in glob.iglob('F:/emotions_detection/labeled/**'):
 
         i += 1
 

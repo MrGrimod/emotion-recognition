@@ -20,6 +20,8 @@ def main():
     x = []
     y = []
 
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor('../storage/shape_predictor_68_face_landmarks.dat')
     for filename in glob.iglob('../storage/dataset/**', recursive=True):
         if os.path.isfile(filename): # filter dirs
             i += 1
@@ -28,11 +30,8 @@ def main():
             face_cascade = cv2.CascadeClassifier('../storage/haarcascade_frontalface_default.xml')
 
             img = cv2.imread(filename, cv2.IMREAD_COLOR)
-            img = detect_face(img)
+            img = detect_face(img, detector, predictor)
             img = cv2.resize(img, (256, 256))
-
-            cv2.imshow('img', img)
-            cv2.waitKey(0)
 
             y.append(str(complete_class))
             x.append(img)
@@ -58,11 +57,7 @@ def main():
                 y = []
 
 
-def detect_face(img):
-
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('../storage/shape_predictor_68_face_landmarks.dat')
-
+def detect_face(img, detector, predictor):
     rects = detector(img, 0)
     roi_color = []
     for (i, rect) in enumerate(rects):

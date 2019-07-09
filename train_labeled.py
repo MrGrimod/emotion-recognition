@@ -7,13 +7,13 @@ from cnn_model.models import *
 from utils.data import *
 
 def main():
-    epochs = 30
+    epochs = 60
     batch_size = 15
     val_training_factor = 0.7
+    learning_rate=0.0001
     files='F:/emotions_detection/labeled/**'
-    learning_rate=0.000000001
 
-    model = VGG_16((576, 768, 3), 9)
+    model = VGG_16((256, 256, 3), 9)
 
     model.compile(optimizer=Adam(lr=learning_rate), loss='categorical_crossentropy', metrics=['accuracy'])
 
@@ -29,7 +29,7 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=tbCallBack)
+    model.fit_generator(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1)
     model.save_weights('storage/train_labeled_weights.h5')
 
 

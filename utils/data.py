@@ -73,49 +73,15 @@ def get_data_metric(files, batch_size, val_training_factor):
     return train_batch_count, val_batch_count
 
 def label_categorisation(data_y):
-    agree =	["agree_considered", "agree_continue", "agree_pure", "agree_reluctant"]
-
-    annoyed = ["annoyed_bothered","annoyed_rolling-eyes","arrogant"]
-
-    i_did_not =	["i_did_not_hear","i_do_not_care","i_do_not_know","i_do_not_understand"]
-
-    negative = ["not_convinced","remember_negative","imagine_negative", "disagree_considered","Disagree_pure","Disagree_reluctant","Disbelief","Pain_felt","Pain_seen","Sad","Confused"]
-
-    positive = ["imagine_positiv","remember_positiv","happy_achievement","happy_laughing","happy_satiated","happy_schadenfreude","impressed"]
-
-    fear = ["disgust","contempt","fear_oops","fear_terror"]
-
-    smiling = ["smiling_sardonic","smiling_triumphant","smiling_uncertain","smiling_winning","smiling_yeah-right","smiling_encouraging","smiling_endearment","smiling_flirting","smiling_sad-nostalgia"]
+    classes =	["agree_considered", "agree_continue", "agree_pure", "agree_reluctant", "annoyed_bothered","annoyed_rolling-eyes","arrogant", "i_did_not_hear","i_do_not_care","i_do_not_know","i_do_not_understand", "not_convinced","remember_negative","imagine_negative", "disagree_considered","Disagree_pure","Disagree_reluctant","Disbelief","Pain_felt","Pain_seen","Sad","Confused", "imagine_positiv","remember_positiv","happy_achievement","happy_laughing","happy_satiated","happy_schadenfreude","impressed", "disgust","contempt","fear_oops","fear_terror", "smiling_sardonic","smiling_triumphant","smiling_uncertain","smiling_winning","smiling_yeah-right","smiling_encouraging","smiling_endearment","smiling_flirting","smiling_sad-nostalgia"];
 
     y_final = []
 
     for i in range(len(data_y)):
-        y = data_y[i]
-        if y in agree:
-            data_y[i] = 0
-            #print('Label Encoder - Agree')
-        elif y in annoyed:
-            data_y[i] = 2
-            #print('Label Encoder - annoyed')
-        elif y in i_did_not:
-            data_y[i] = 3
-            #print('Label Encoder - i_did_not')
-        elif y in negative:
-            data_y[i] = 4
-            #print('Label Encoder - negative')
-        elif y in positive:
-            data_y[i] = 5
-            #print('Label Encoder - positive')
-        elif y in fear:
-            data_y[i] = 6
-            #print('Label Encoder - fear')
-        elif y in smiling:
-            data_y[i] = 7
-            #print('Label Encoder - smiling')
-        else:
-            data_y[i] = 8
-            #print('Label Encoder - Unknown')
-
+        for c in range(len(classes)):
+            if classes[c] in data_y[i]:
+                data_y[i] = classes.index(classes[c])
+                
     data_y = to_categorical(data_y, num_classes=9)
 
     return data_y

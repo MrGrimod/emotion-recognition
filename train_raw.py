@@ -7,10 +7,10 @@ from cnn_model.models import *
 from utils.data import *
 
 def main():
-    epochs = 30
-    batch_size = 1
+    epochs = 60
+    batch_size = 15
     val_training_factor = 0.7
-    learning_rate = 0.01
+    learning_rate = 0.0001
     files='F:/emotions_detection/raw/**'
 
     model = VGG_16((256, 256, 3), 9)
