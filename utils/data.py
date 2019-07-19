@@ -73,7 +73,8 @@ def get_data_metric(files, batch_size, val_training_factor):
     return train_batch_count, val_batch_count
 
 def label_categorisation(data_y):
-    classes =	["agree_considered", "agree_continue", "agree_pure", "agree_reluctant", "annoyed_bothered","annoyed_rolling-eyes","arrogant", "i_did_not_hear","i_do_not_care","i_do_not_know","i_do_not_understand", "not_convinced","remember_negative","imagine_negative", "disagree_considered","Disagree_pure","Disagree_reluctant","Disbelief","Pain_felt","Pain_seen","Sad","Confused", "imagine_positiv","remember_positiv","happy_achievement","happy_laughing","happy_satiated","happy_schadenfreude","impressed", "disgust","contempt","fear_oops","fear_terror", "smiling_sardonic","smiling_triumphant","smiling_uncertain","smiling_winning","smiling_yeah-right","smiling_encouraging","smiling_endearment","smiling_flirting","smiling_sad-nostalgia"];
+    # !important! the order of the words (their index) decides about their label number! * do not change, if not necessary *
+    classes = ['agree_considered','agree_continue','agree_pure','agree_reluctant','aha-light_bulb_moment','annoyed_bothered','annoyed_rolling-eyes','arrogant','bored','compassion','confused','contempt','I_did_not_hear','I_dont_care','I_do_not_care','I_dont_understand','I_dont_know','I_do_not_know','I_do_not_understand','disagree_considered','disagree_pure','disagree_reluctant','disbelief','disgust','embarrassment','fear_oops','fear_terror','happy_achievement','happy_laughing','happy_satiated','happy_schadenfreude','imagine_negative','imagine_positiv','impressed','insecurity','not_convinced','pain_felt','pain_seen','sad','remember_negative','smiling_sardonic','remember_positiv','thinking_considering','thinking_problemsolving','treudoof_bambi-eyes','smiling_encouraging','smiling_endearment','smiling_flirting','smiling_sad-nostalgia','smiling_triumphant','smiling_uncertain','smiling_winning','smiling_yeah-right','tired','treudoof ("bambi-eyes")', 'thinking_problem-solving'];
 
     y_final = []
 
@@ -81,7 +82,7 @@ def label_categorisation(data_y):
         for c in range(len(classes)):
             if classes[c] in data_y[i]:
                 data_y[i] = classes.index(classes[c])
-                
-    data_y = to_categorical(data_y, num_classes=9)
+
+    data_y = to_categorical(data_y, num_classes=len(classes))
 
     return data_y

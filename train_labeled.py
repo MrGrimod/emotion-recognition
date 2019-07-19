@@ -5,12 +5,14 @@ from keras.regularizers import l2
 from keras.optimizers import Adam
 from cnn_model.models import *
 from utils.data import *
+import calendar
+import time
 
 def main():
-    epochs = 60
+    epochs = 100
     batch_size = 15
     val_training_factor = 0.7
-    learning_rate=0.0001
+    learning_rate=0.1
     files='F:/emotions_detection/labeled/**'
 
     model = VGG_16((256, 256, 3), 9)
@@ -19,7 +21,7 @@ def main():
 
     print('training model on labeled data \r')
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/labeled_training_tb', histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./dataset/tensor_board/labeled_training_tb_'+learning_rate+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
 
     data_gen = generate_data_batches(files, batch_size, val_training_factor)
 

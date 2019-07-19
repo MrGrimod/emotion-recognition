@@ -24,18 +24,20 @@ def main():
     predictor = dlib.shape_predictor('../storage/shape_predictor_68_face_landmarks.dat')
     for filename in glob.iglob('../storage/dataset/**', recursive=True):
         if os.path.isfile(filename): # filter dirs
-            i += 1
             complete_class = filename.split('\\')[3]
 
             face_cascade = cv2.CascadeClassifier('../storage/haarcascade_frontalface_default.xml')
 
             img = cv2.imread(filename, cv2.IMREAD_COLOR)
             img = detect_face(img, detector, predictor)
-            img = cv2.resize(img, (256, 256))
+            if type(img) is np.ndarray:
+                i += 1
+                img = cv2.resize(img, (256, 256))
 
-            y.append(str(complete_class))
-            x.append(img)
-
+                y.append(str(complete_class))
+                x.append(img)
+            else:
+                print('Did not find any faces!')
             if i >= files_chunk_size:
                 c += 1
                 y = np.array(y)
