@@ -12,7 +12,7 @@ def main():
     epochs = 50
     batch_size = 15
     val_training_factor = 0.7
-    learning_rate = 1
+    learning_rate = 0.1
     files='F:/emotions_detection/raw/**'
 
     model = VGG_16((256, 256, 3), 56)
@@ -20,7 +20,7 @@ def main():
 
     print('training model on raw unlabeld data \r')
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/raw_training_tb_'+learning_rate+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/raw_training_tb_'+str(learning_rate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
 
     data_gen = generate_data_batches(files, batch_size, val_training_factor)
 
