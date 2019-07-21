@@ -9,7 +9,7 @@ import calendar
 import time
 
 def main():
-    epochs = 80
+    epochs = 50
     batch_size = 15
     val_training_factor = 0.7
     learning_rate=0.1
