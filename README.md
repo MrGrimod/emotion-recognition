@@ -4,15 +4,15 @@ The goal is to get an idea of the improvement done by datasets in which the imag
 
 Raw:
 
-![result image](media\raw.jpg)
+![result image](media/raw.jpg)
 
 Labeled:
 
-![labeled image](media\labeled.jpg)
+![labeled image](media/labeled.jpg)
 
 ### Results
 
-![result image](media\result.jpg)
+![result image](media/result.jpg)
 
 The results show a 15% decrease in loss which is not much considering the amount of time that went into labeling, but is still worth thinking about if it's easy to create those extra lables (markers)
 
