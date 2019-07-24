@@ -15,7 +15,7 @@ def main():
     learning_rate = 0.1
     files='F:/emotions_detection/raw/**'
 
-    model = VGG_16((256, 256, 3), 56)
+    model = VGG_16((256, 256, 3), len(get_classes()))
     model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learning_rate), metrics=['accuracy'])
 
     print('training model on raw unlabeld data \r')

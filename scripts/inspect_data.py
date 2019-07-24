@@ -22,7 +22,10 @@ def main():
 
         for i in tqdm(range(len(data_x))):
             img = data_x[i]
-            cv2.imshow('IMG', img)
+            print(np.argmax(data_y[i]))
+            cv2.putText(img,str(get_classes()[np.argmax(data_y[i])-1]), (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+
+            cv2.imshow('img', img)
             cv2.waitKey(0)
 
 if __name__ == "__main__":

@@ -19,6 +19,7 @@ def main():
     c = 0
     x = []
     y = []
+    in_class_list = False
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('../storage/shape_predictor_68_face_landmarks.dat')
@@ -26,38 +27,49 @@ def main():
         if os.path.isfile(filename): # filter dirs
             complete_class = filename.split('\\')[3]
 
-            face_cascade = cv2.CascadeClassifier('../storage/haarcascade_frontalface_default.xml')
+            for b in range(len(get_classes())):
+                if str(complete_class) == get_classes()[b]:
+                    in_class_list = True
 
-            img = cv2.imread(filename, cv2.IMREAD_COLOR)
-            img = detect_face(img, detector, predictor)
-            if type(img) is np.ndarray:
-                i += 1
-                img = cv2.resize(img, (256, 256))
+            if in_class_list == True:
+                img = cv2.imread(filename, cv2.IMREAD_COLOR)
+                img = detect_face(img, detector, predictor)
+                if type(img) is np.ndarray:
+                    i += 1
+                    img = cv2.resize(img, (256, 256))
 
-                y.append(str(complete_class))
-                x.append(img)
-            else:
-                print('Did not find any faces!')
-            if i >= files_chunk_size:
-                c += 1
-                y = np.array(y)
+                    y.append(str(complete_class))
+                    x.append(img)
+                else:
+                    print('Did not find any faces!')
 
-                x = np.array(x)
+                if i >= files_chunk_size:
+                    c += 1
+                    y = np.array(y)
 
-                y = label_categorisation(y)
+                    x = np.array(x)
 
-                file_loc = 'F:/emotions_detection/raw/'+str(c)+'.npy'
+                    x_final, y_final = label_categorisation(x,y)
 
-                data = np.array([[x], y])
+                    file_loc = 'F:/emotions_detection/raw/'+str(c)+'.npy'
 
-                np.save(file_loc, data)
+                    print(x_final.shape)
+                    print(y_final.shape)
 
-                print('Saved to', file_loc)
+                    if not x_final.shape[0] <= 1:
+                        data = np.array([[x_final], y_final])
 
-                i = 0
-                x = []
-                y = []
+                        np.save(file_loc, data)
 
+                        print('Saved to', file_loc)
+
+                    i = 0
+                    x = []
+                    y = []
+
+                    in_class_list = False
+            # else:
+            #     print('skipped img')
 
 def detect_face(img, detector, predictor):
     rects = detector(img, 0)
