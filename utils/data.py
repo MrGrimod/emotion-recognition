@@ -73,7 +73,7 @@ def get_data_metric(files, batch_size, val_training_factor):
     return train_batch_count, val_batch_count
 
 def get_classes():
-    return ['agree_pure','annoyed_rollingeyes','bored','confused','contempt','I_dont_understand','I_do_not_know','disagree_pure','disbelief','disgust','embarrassment','fear_terror','happy_laughing','impressed','sad','smiling_winning'];
+    return ['agree_pure', 'disagree_pure','annoyed_rollingeyes','bored','confused','contempt','I_dont_understand','I_do_not_know','disbelief','disgust','embarrassment','fear_terror','happy_laughing','impressed','sad','smiling_winning'];
 
 def label_categorisation(data_x, data_y):
     # !important! the order of the words (their index) decides about their label number! * do not change, if not necessary *
@@ -84,11 +84,15 @@ def label_categorisation(data_x, data_y):
     y_final = []
     x_final = []
 
+    print(data_y)
+
     for i in range(len(data_y)):
         for c in range(len(classes)):
-            if classes[c] in data_y[i]:
+            if classes[c] == data_y[i]:
                 y_final.append(classes.index(classes[c]))
                 x_final.append(data_x[i])
+
+    print(y_final)
 
     y_final = to_categorical(y_final, num_classes=len(classes))
     x_final = np.array(x_final)

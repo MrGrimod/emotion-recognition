@@ -48,13 +48,10 @@ def main():
                     y = np.array(y)
 
                     x = np.array(x)
-
                     x_final, y_final = label_categorisation(x,y)
 
-                    file_loc = 'F:/emotions_detection/raw/'+str(c)+'.npy'
 
-                    print(x_final.shape)
-                    print(y_final.shape)
+                    file_loc = 'F:/emotions_detection/raw/'+str(c)+'.npy'
 
                     if not x_final.shape[0] <= 1:
                         data = np.array([[x_final], y_final])

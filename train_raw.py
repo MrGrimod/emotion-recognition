@@ -10,7 +10,7 @@ import time
 
 def main():
     epochs = 50
-    batch_size = 15
+    batch_size = 5
     val_training_factor = 0.7
     learning_rate = 0.1
     files='F:/emotions_detection/raw/**'
