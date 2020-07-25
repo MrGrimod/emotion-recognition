@@ -1,6 +1,6 @@
 # Emotion Recognition
 
-The goal is to get an idea of the improvement done by datasets in which the image data is additionally labeled with markers on eyes, mouth, etc., marked with dlib.
+The goal is to train a neural network with mixed input data(facial features & the img) to classify expressed emotions. The facial features are represented by single point array which mark the mout, face, .... positions which are responsible respectively the best indicator for emotions.
 
 Raw:
 
@@ -14,11 +14,11 @@ Labeled:
 
 ![result image](media/result.jpg)
 
-The results show a 15% decrease in loss which is not much considering the amount of time that went into labeling, but is still worth thinking about if it's easy to create those extra lables (markers)
+...
 
 ## Setup
 
-- Download the dataset from [here](https://www.b-tu.de/en/graphic-systems/databases/the-large-mpi-facial-expression-database). (You don't need to download all sets)
+- Download the dataset from [here](https://www.b-tu.de/en/graphic-systems/databases/the-large-mpi-facial-expression-database). (You don't need to download all sets one is sufficient)
 
 - Create the raw dataset by running
       python create_dataset.py

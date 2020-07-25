@@ -19,32 +19,32 @@ def main():
 
         data = np.load(filename)
 
-        data_x = np.array([i for i in data[0]])
+        dataX = np.array([i for i in data[0]])
 
-        data_y = np.array([i for i in data[1]])
+        dataY = np.array([i for i in data[1]])
 
-        data_x_f = detect_features(data_x)
+        dataXFeature = detectFeatures(data_x)
 
         print('Data: ', data.shape)
 
-        print('Data X: ', data_x_f.shape)
+        print('Data X: ', dataXFeature.shape)
 
-        print('Data Y: ', data_y.shape)
+        print('Data Y: ', dataX.shape)
 
-        data_f = np.array([[data_x_f], data_y])
+        finalData = np.array([[data_x_f], data_y])
 
-        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', data_f)
+        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', finalData)
 
 
-def detect_features(x_data):
+def detectFeatures(dataX):
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('storage/shape_predictor_68_face_landmarks.dat')
 
-    x_final = []
+    dataXFinal = []
     print('Detecting data - using DLib')
-    for i in tqdm(range(len(x_data[0]))):
-        img = x_data[0][i]
+    for i in tqdm(range(len(dataX[0]))):
+        img = dataX[0][i]
         rects = detector(img, 0)
         for (i, rect) in enumerate(rects):
         	shape = predictor(img, rect)
@@ -59,11 +59,11 @@ def detect_features(x_data):
 
         # cv2.imshow("Output", img)
         # cv2.waitKey(0)
-        x_final.append(img)
+        dataXFinal.append(img)
 
-    x_final = np.array(x_final)
+    dataXFinal = np.array(dataXFinal)
 
-    return x_final
+    return dataXFinal
 
 def detect_features_cv_cascades(x_data):
 
