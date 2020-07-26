@@ -12,7 +12,7 @@ from collections import OrderedDict
 
 def main():
     i = 0
-    for filename in glob.iglob('F:/emotions_detection/raw/**'):
+    for filename in glob.iglob('data/MPI_large_centralcam_hi_islf_complete/**'):
         i += 1
 
         print(filename)
@@ -23,17 +23,19 @@ def main():
 
         dataY = np.array([i for i in data[1]])
 
-        dataXFeature = detectFeatures(data_x)
+        featurePoints = detectFeatures(data_x)
 
         print('Data: ', data.shape)
 
-        print('Data X: ', dataXFeature.shape)
+        print('Data X: ', dataX.shape)
+
+        print('Data X Feature Points: ', featurePoints.shape)
 
         print('Data Y: ', dataX.shape)
 
-        finalData = np.array([[data_x_f], data_y])
+        finalData = np.array([[dataX, featurePoints], data_y])
 
-        np.save('F:/emotions_detection/labeled/'+str(i)+'.npy', finalData)
+        np.save('data/labeled/'+str(i)+'.npy', finalData)
 
 
 def detectFeatures(dataX):
@@ -41,7 +43,7 @@ def detectFeatures(dataX):
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('storage/shape_predictor_68_face_landmarks.dat')
 
-    dataXFinal = []
+    featurePoints = []
     print('Detecting data - using DLib')
     for i in tqdm(range(len(dataX[0]))):
         img = dataX[0][i]
@@ -52,40 +54,42 @@ def detectFeatures(dataX):
 
         	(x, y, w, h) = face_utils.rect_to_bb(rect)
 
+            featurePoints.append([x, y, w, h])
+
             #cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-        	for (x, y) in shape:
-        		cv2.circle(img, (x, y), 1, (255, 0, 0), -1)
+        	# for (x, y) in shape:
+        	# 	cv2.circle(img, (x, y), 1, (255, 0, 0), -1)
 
         # cv2.imshow("Output", img)
         # cv2.waitKey(0)
-        dataXFinal.append(img)
+        # dataXFinal.append(img)
 
-    dataXFinal = np.array(dataXFinal)
+    featurePoints = np.array(featurePoints)
 
-    return dataXFinal
+    return featurePoints
 
-def detect_features_cv_cascades(x_data):
+def detectFeaturesCVCascade(xData):
 
-    face_cascade = cv2.CascadeClassifier('cascades/haarcascade_frontalface_default.xml')
-    eye_cascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
-    mouth_cascade = cv2.CascadeClassifier('cascades/haarcascade_mouth.xml')
+    faceCascade = cv2.CascadeClassifier('cascades/haarcascade_frontalface_default.xml')
+    eyeCascade = cv2.CascadeClassifier('cascades/haarcascade_eye.xml')
+    mouthCascade = cv2.CascadeClassifier('cascades/haarcascade_mouth.xml')
 
-    x_final = []
+    xFinal = []
     print('Detecting data - using OpenCv')
-    for i in tqdm(range(len(x_data))):
-        faces = face_cascade.detectMultiScale(x_data[i], 1.3, 5)
+    for i in tqdm(range(len(xData))):
+        faces = faceCascade.detectMultiScale(xData[i], 1.3, 5)
 
-        eyes = eye_cascade.detectMultiScale(x_data[i])
+        eyes = eyeCascade.detectMultiScale(xData[i])
         for (ex,ey,ew,eh) in eyes:
-            cv2.rectangle(x_data[i],(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-        mouth = mouth_cascade.detectMultiScale(x_data[i])
+            cv2.rectangle(xData[i],(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+        mouth = mouthCascade.detectMultiScale(xData[i])
         for (ex,ey,ew,eh) in mouth:
-            cv2.rectangle(x_data[i],(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+            cv2.rectangle(xData[i],(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
-        x_final.append(x_data[i])
+        xFinal.append(xData[i])
 
-    return x_final
+    return xFinal
 
 
 def rect_to_bb(rect):

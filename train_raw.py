@@ -10,23 +10,23 @@ import time
 
 def main():
     epochs = 50
-    batch_size = 5
-    val_training_factor = 0.7
-    learning_rate = 0.1
-    files='F:/emotions_detection/raw/**'
+    batchSize = 5
+    VALTrainingFactor = 0.7
+    learningRate = 0.1
+    files='data/raw/**'
 
-    model = VGG_16((256, 256, 3), len(get_classes()))
-    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learning_rate), metrics=['accuracy'])
+    model = basicCNNModel((256, 256, 3), len(get_classes()))
+    model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learningRate), metrics=['accuracy'])
 
     print('training model on raw unlabeld data \r')
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/raw_training_tb_'+str(learning_rate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/raw_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
 
-    data_gen = generate_data_batches(files, batch_size, val_training_factor)
+    data_gen = generate_data_batches(files, batchSize, VALTrainingFactor)
 
-    val_data_gen = generate_val_data_batches(files, batch_size, val_training_factor)
+    val_data_gen = generate_val_data_batches(files, batchSize, VALTrainingFactor)
 
-    train_batch_count, val_batch_count = get_data_metric(files, batch_size, val_training_factor)
+    train_batch_count, val_batch_count = get_data_metric(files, batchSize, VALTrainingFactor)
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
