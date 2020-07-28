@@ -2,7 +2,6 @@ import csv
 import os
 import numpy as np
 import dlib
-import pickle
 import cv2
 import glob
 from tqdm import tqdm
@@ -12,18 +11,18 @@ from collections import OrderedDict
 
 def main():
     i = 0
-    for filename in glob.iglob('data/MPI_large_centralcam_hi_islf_complete/**'):
+    for filename in glob.iglob('data/raw/**'):
         i += 1
 
         print(filename)
 
-        data = np.load(filename)
+        data = np.load(filename, allow_pickle=True)
 
         dataX = np.array([i for i in data[0]])
 
         dataY = np.array([i for i in data[1]])
 
-        featurePoints = detectFeatures(data_x)
+        featurePoints = detectFeatures(dataX)
 
         print('Data: ', data.shape)
 
@@ -33,7 +32,7 @@ def main():
 
         print('Data Y: ', dataX.shape)
 
-        finalData = np.array([[dataX, featurePoints], data_y])
+        finalData = np.array([[dataX, featurePoints], dataY])
 
         np.save('data/labeled/'+str(i)+'.npy', finalData)
 
@@ -41,7 +40,7 @@ def main():
 def detectFeatures(dataX):
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('storage/shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor('data/shape_predictor_68_face_landmarks.dat')
 
     featurePoints = []
     print('Detecting data - using DLib')
@@ -49,21 +48,12 @@ def detectFeatures(dataX):
         img = dataX[0][i]
         rects = detector(img, 0)
         for (i, rect) in enumerate(rects):
-        	shape = predictor(img, rect)
-        	shape = face_utils.shape_to_np(shape)
+            shape = predictor(img, rect)
+            shape = face_utils.shape_to_np(shape)
 
-        	(x, y, w, h) = face_utils.rect_to_bb(rect)
+            (x, y, w, h) = face_utils.rect_to_bb(rect)
 
-            featurePoints.append([x, y, w, h])
-
-            #cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-        	# for (x, y) in shape:
-        	# 	cv2.circle(img, (x, y), 1, (255, 0, 0), -1)
-
-        # cv2.imshow("Output", img)
-        # cv2.waitKey(0)
-        # dataXFinal.append(img)
+        featurePoints.append([x, y, w, h])
 
     featurePoints = np.array(featurePoints)
 

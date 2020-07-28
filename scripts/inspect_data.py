@@ -6,25 +6,23 @@ from utils.data import *
 
 def main():
     i = 0
-    for filename in glob.iglob('F:/emotions_detection/raw/**'):
-
+    for filename in glob.iglob('../data/labeled/**'):
         i += 1
 
-        print(filename)
+        data = np.load(filename, allow_pickle=True)
+        print(data.shape)
+        dataX = np.array(data[0][0][0])
 
-        data = np.load(filename)
+        featurePoints = np.array(data[0][1][0])
 
-        data_x = np.array(data[0][0])
+        dataY = np.array(data[1])
 
-        data_y = np.array(data[1])
+        for i in tqdm(range(len(dataX))):
+            img = dataX[i]
+            print(str(get_classes()[np.argmax(dataY[i])]) + ',' + str(np.argmax(dataY[i])))
+            cv2.putText(img,str(get_classes()[np.argmax(dataY[i])]), (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
 
-        print(data_x.shape)
-
-        for i in tqdm(range(len(data_x))):
-            img = data_x[i]
-            print(str(get_classes()[np.argmax(data_y[i])]) + ',' + str(np.argmax(data_y[i])))
-            cv2.putText(img,str(get_classes()[np.argmax(data_y[i])]), (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
-
+            print(featurePoints)
             cv2.imshow('img', img)
             cv2.waitKey(0)
 

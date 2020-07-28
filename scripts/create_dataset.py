@@ -19,54 +19,54 @@ def main():
     c = 0
     x = []
     y = []
+    classes = []
     in_class_list = False
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('../storage/shape_predictor_68_face_landmarks.dat')
-    for filename in glob.iglob('../storage/dataset/**', recursive=True):
+    predictor = dlib.shape_predictor('../data/shape_predictor_68_face_landmarks.dat')
+    for filename in glob.iglob('../data/MPI_large_centralcam_hi_islf_complete/**', recursive=True):
         if os.path.isfile(filename): # filter dirs
-            complete_class = filename.split('\\')[3]
+            # in windows split by \\
+            # print(filename)
+            complete_class = filename.split('/')[4]
+            
+            # print(complete_class)
+            if not complete_class in classes:
+                classes.append(complete_class)
 
-            for b in range(len(get_classes())):
-                if str(complete_class) == get_classes()[b]:
-                    in_class_list = True
+            
+            # if complete_class in get_classes():
+            img = cv2.imread(filename, cv2.IMREAD_COLOR)
+            img = detect_face(img, detector, predictor)
+            if type(img) is np.ndarray:
+                i += 1
+                img = cv2.resize(img, (256, 256))
+                
+                y.append(str(complete_class))
+                x.append(img)
+            else:
+                print('Did not find any faces!')
 
-            if in_class_list == True:
-                img = cv2.imread(filename, cv2.IMREAD_COLOR)
-                img = detect_face(img, detector, predictor)
-                if type(img) is np.ndarray:
-                    i += 1
-                    img = cv2.resize(img, (256, 256))
+            if i >= files_chunk_size:
+                c += 1
+                y = np.array(y)
 
-                    y.append(str(complete_class))
-                    x.append(img)
-                else:
-                    print('Did not find any faces!')
+                x = np.array(x)
+                x_final, y_final = label_categorisation(x,y)
 
-                if i >= files_chunk_size:
-                    c += 1
-                    y = np.array(y)
+                file_loc = '../data/raw/'+str(c)+'.npy'
 
-                    x = np.array(x)
-                    x_final, y_final = label_categorisation(x,y)
+                if not x_final.shape[0] <= 1:
 
+                    data = np.array([[x_final], y_final])
 
-                    file_loc = 'F:/emotions_detection/raw/'+str(c)+'.npy'
+                    np.save(file_loc, data)
 
-                    if not x_final.shape[0] <= 1:
-                        data = np.array([[x_final], y_final])
+                    print('Saved to', file_loc)
 
-                        np.save(file_loc, data)
-
-                        print('Saved to', file_loc)
-
-                    i = 0
-                    x = []
-                    y = []
-
-                    in_class_list = False
-            # else:
-            #     print('skipped img')
+                i = 0
+                x = []
+                y = []
 
 def detect_face(img, detector, predictor):
     rects = detector(img, 0)

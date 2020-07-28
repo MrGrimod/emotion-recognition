@@ -83,16 +83,12 @@ def label_categorisation(data_x, data_y):
 
     y_final = []
     x_final = []
-
-    print(data_y)
-
+    
     for i in range(len(data_y)):
         for c in range(len(classes)):
             if classes[c] == data_y[i]:
                 y_final.append(classes.index(classes[c]))
                 x_final.append(data_x[i])
-
-    print(y_final)
 
     y_final = to_categorical(y_final, num_classes=len(classes))
     x_final = np.array(x_final)
