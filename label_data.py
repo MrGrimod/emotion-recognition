@@ -32,7 +32,7 @@ def main():
 
         print('Data Y: ', dataX.shape)
 
-        finalData = np.array([[dataX, featurePoints], dataY])
+        finalData = np.array([[dataX, [featurePoints]], dataY])
 
         np.save('data/labeled/'+str(i)+'.npy', finalData)
 
@@ -43,6 +43,7 @@ def detectFeatures(dataX):
     predictor = dlib.shape_predictor('data/shape_predictor_68_face_landmarks.dat')
 
     featurePoints = []
+    imgFeaturePoints = []
     print('Detecting data - using DLib')
     for i in tqdm(range(len(dataX[0]))):
         img = dataX[0][i]
@@ -50,11 +51,10 @@ def detectFeatures(dataX):
         for (i, rect) in enumerate(rects):
             shape = predictor(img, rect)
             shape = face_utils.shape_to_np(shape)
-
             (x, y, w, h) = face_utils.rect_to_bb(rect)
-
-        featurePoints.append([x, y, w, h])
-
+            imgFeaturePoints.append([x, y, w, h])
+        featurePoints.append(imgFeaturePoints)
+        imgFeaturePoints = []
     featurePoints = np.array(featurePoints)
 
     return featurePoints

@@ -10,7 +10,7 @@ def main():
         i += 1
 
         data = np.load(filename, allow_pickle=True)
-        print(data.shape)
+        print(data)
         dataX = np.array(data[0][0][0])
 
         featurePoints = np.array(data[0][1][0])
@@ -19,8 +19,8 @@ def main():
 
         for i in tqdm(range(len(dataX))):
             img = dataX[i]
-            print(str(get_classes()[np.argmax(dataY[i])]) + ',' + str(np.argmax(dataY[i])))
-            cv2.putText(img,str(get_classes()[np.argmax(dataY[i])]), (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+            #print(str(get_classes()[np.argmax(dataY[i])]) + ',' + str(np.argmax(dataY[i])))
+            cv2.putText(img,str(dataY[i]), (20,20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
 
             print(featurePoints)
             cv2.imshow('img', img)

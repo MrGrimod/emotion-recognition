@@ -75,15 +75,10 @@ def get_data_metric(files, batch_size, val_training_factor):
 def get_classes():
     return ['agree_pure', 'disagree_pure','annoyed_rollingeyes','bored','confused','contempt','I_dont_understand','I_do_not_know','disbelief','disgust','embarrassment','fear_terror','happy_laughing','impressed','sad','smiling_winning'];
 
-def label_categorisation(data_x, data_y):
-    # !important! the order of the words (their index) decides about their label number! * do not change, if not necessary *
-    classes = get_classes()
-
-    # ['agree_considered','agree_continue','agree_pure','agree_reluctant','aha-light_bulb_moment','annoyed_bothered','annoyed_rolling-eyes','arrogant','bored','compassion','confused','contempt','I_did_not_hear','I_dont_care','I_do_not_care','I_dont_understand','I_dont_know','I_do_not_know','I_do_not_understand','disagree_considered','disagree_pure','disagree_reluctant','disbelief','disgust','embarrassment','fear_oops','fear_terror','happy_achievement','happy_laughing','happy_satiated','happy_schadenfreude','imagine_negative','imagine_positiv','impressed','insecurity','not_convinced','pain_felt','pain_seen','sad','remember_negative','smiling_sardonic','remember_positiv','thinking_considering','thinking_problemsolving','treudoof_bambi-eyes','smiling_encouraging','smiling_endearment','smiling_flirting','smiling_sad-nostalgia','smiling_triumphant','smiling_uncertain','smiling_winning','smiling_yeah-right','tired','treudoof ("bambi-eyes")', 'thinking_problem-solving'];
-
+def label_categorisation(data_x, data_y, classes):
     y_final = []
     x_final = []
-    
+
     for i in range(len(data_y)):
         for c in range(len(classes)):
             if classes[c] == data_y[i]:

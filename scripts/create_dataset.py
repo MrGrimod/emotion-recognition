@@ -14,6 +14,7 @@ from utils.data import *
 
 
 def main():
+    dataSetDir = '../data/MPI_large_centralcam_hi_islf_complete/**'
     files_chunk_size = 60
     i = 0
     c = 0
@@ -24,7 +25,7 @@ def main():
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('../data/shape_predictor_68_face_landmarks.dat')
-    for filename in glob.iglob('../data/MPI_large_centralcam_hi_islf_complete/**', recursive=True):
+    for filename in glob.iglob(dataSetDir, recursive=True):
         if os.path.isfile(filename): # filter dirs
             # in windows split by \\
             # print(filename)
@@ -33,15 +34,21 @@ def main():
             # print(complete_class)
             if not complete_class in classes:
                 classes.append(complete_class)
+    
+    # ! raw dataset labeling ise dependent on that order ! sorting classes by alphabet 
+    classes.sort()
 
-            
+    print("classes exracted: ")
+    print(classes)
+
+    for filename in glob.iglob(dataSetDir, recursive=True):
+        if os.path.isfile(filename): # filter dirs        
             # if complete_class in get_classes():
             img = cv2.imread(filename, cv2.IMREAD_COLOR)
             img = detect_face(img, detector, predictor)
             if type(img) is np.ndarray:
                 i += 1
                 img = cv2.resize(img, (256, 256))
-                
                 y.append(str(complete_class))
                 x.append(img)
             else:
@@ -50,12 +57,11 @@ def main():
             if i >= files_chunk_size:
                 c += 1
                 y = np.array(y)
-
                 x = np.array(x)
-                x_final, y_final = label_categorisation(x,y)
+                
+                x_final, y_final = label_categorisation(x, y, classes)
 
                 file_loc = '../data/raw/'+str(c)+'.npy'
-
                 if not x_final.shape[0] <= 1:
 
                     data = np.array([[x_final], y_final])
