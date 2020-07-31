@@ -32,7 +32,7 @@ def main():
 
         print('Data Y: ', dataX.shape)
 
-        finalData = np.array([[dataX, [featurePoints]], dataY])
+        finalData = np.array([dataX, featurePoints, dataY])
 
         np.save('data/labeled/'+str(i)+'.npy', finalData)
 
@@ -51,13 +51,12 @@ def detectFeatures(dataX):
         for (i, rect) in enumerate(rects):
             shape = predictor(img, rect)
             shape = face_utils.shape_to_np(shape)
-            (x, y, w, h) = face_utils.rect_to_bb(rect)
-            imgFeaturePoints.append([x, y, w, h])
+            
+            imgFeaturePoints.append(shape)
         featurePoints.append(imgFeaturePoints)
         imgFeaturePoints = []
-    featurePoints = np.array(featurePoints)
-
-    return featurePoints
+        
+    return np.array(featurePoints)
 
 def detectFeaturesCVCascade(xData):
 

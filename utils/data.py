@@ -72,8 +72,22 @@ def get_data_metric(files, batch_size, val_training_factor):
 
     return train_batch_count, val_batch_count
 
-def get_classes():
-    return ['agree_pure', 'disagree_pure','annoyed_rollingeyes','bored','confused','contempt','I_dont_understand','I_do_not_know','disbelief','disgust','embarrassment','fear_terror','happy_laughing','impressed','sad','smiling_winning'];
+def getClassesForDataSet(dataSetDir):
+    classes = []
+    for filename in glob.iglob(dataSetDir, recursive=True):
+        if os.path.isfile(filename): # filter dirs
+            # in windows split by \\
+            # print(filename)
+            complete_class = filename.split('/')[3]
+            
+            # print(complete_class)
+            if not complete_class in classes:
+                classes.append(complete_class)
+
+    # ! raw dataset labeling ise dependent on that order ! sorting classes by alphabet 
+    classes.sort()
+
+    return classes
 
 def label_categorisation(data_x, data_y, classes):
     y_final = []

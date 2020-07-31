@@ -13,9 +13,12 @@ def main():
     batchSize = 5
     VALTrainingFactor = 0.7
     learningRate = 0.1
+    dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
     files='data/raw/**'
 
-    model = basicCNNModel((256, 256, 3), len(get_classes()))
+    classes = getClassesForDataSet(dataSetDir)
+
+    model = basicCNNModel((256, 256, 3), len(classes))
     model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learningRate), metrics=['accuracy'])
 
     print('training model on raw unlabeld data \r')
