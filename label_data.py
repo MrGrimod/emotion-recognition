@@ -10,6 +10,8 @@ from imutils import face_utils
 from collections import OrderedDict
 
 def main():
+    files_chunk_size = 60
+    
     i = 0
     for filename in glob.iglob('data/raw/**'):
         i += 1
@@ -22,14 +24,13 @@ def main():
 
         dataY = np.array([i for i in data[1]])
 
-        featurePoints = detectFeatures(dataX)
+        featurePoints = np.array(detectFeatures(dataX, files_chunk_size))
 
         print('Data: ', data.shape)
 
         print('Data X: ', dataX.shape)
 
         print('Data X Feature Points: ', featurePoints.shape)
-
         print('Data Y: ', dataX.shape)
 
         finalData = np.array([dataX, featurePoints, dataY])
@@ -37,13 +38,13 @@ def main():
         np.save('data/labeled/'+str(i)+'.npy', finalData)
 
 
-def detectFeatures(dataX):
+def detectFeatures(dataX, files_chunk_size):
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('data/shape_predictor_68_face_landmarks.dat')
 
-    featurePoints = []
-    imgFeaturePoints = []
+    featurePoints = np.empty([files_chunk_size, 68, 2])
+    imgFeaturePoints = np.empty([68, 2])
     print('Detecting data - using DLib')
     for i in tqdm(range(len(dataX[0]))):
         img = dataX[0][i]
@@ -51,10 +52,9 @@ def detectFeatures(dataX):
         for (i, rect) in enumerate(rects):
             shape = predictor(img, rect)
             shape = face_utils.shape_to_np(shape)
-            
-            imgFeaturePoints.append(shape)
-        featurePoints.append(imgFeaturePoints)
-        imgFeaturePoints = []
+            np.append(imgFeaturePoints, shape)
+        np.append(featurePoints, imgFeaturePoints)
+        imgFeaturePoints = np.empty([68, 2])
         
     return np.array(featurePoints)
 
@@ -94,7 +94,7 @@ def rect_to_bb(rect):
 	return (x, y, w, h)
 
 
-def shape_to_np(shape, dtype="int"):
+def shapeToNP(shape, dtype="int"):
 	# initialize the list of (x, y)-coordinates
 	coords = np.zeros((68, 2), dtype=dtype)
 
@@ -104,7 +104,7 @@ def shape_to_np(shape, dtype="int"):
 		coords[i] = (shape.part(i).x, shape.part(i).y)
 
 	# return the list of (x, y)-coordinates
-	return coords
+	return np.array(coords)
 
 
 if __name__ == '__main__':

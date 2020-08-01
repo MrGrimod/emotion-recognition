@@ -5,7 +5,7 @@ from keras.layers.convolutional import Conv2D , MaxPooling2D, ZeroPadding2D
 from keras.optimizers import SGD
 import cv2, numpy as np
 
-def multipleInputDataModel():
+def multipleInputDataModel(mpl, cnn):
     inputConcat = concatenate([mlp.output, cnn.output])
     x = Dense(4, activation="relu")(inputConcat)
     x = Dense(1, activation="linear")(x)
@@ -13,9 +13,9 @@ def multipleInputDataModel():
 
     return model
     
-def mplModel(dims):
+def mplModel(inputShape):
     model = Sequential()
-    model.add(Dense(8, input_dim=dim, activation="relu"))
+    model.add(Dense(8, input_dim=inputShape, activation="relu"))
     model.add(Dense(4, activation="relu"))
 
     return model

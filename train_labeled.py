@@ -17,17 +17,17 @@ def main():
     
     files='data/labeled/**'
 
-    cnnModel = basicCNNModel((256, 256, 3), 56)
-    cnnModel.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learningRate), metrics=['accuracy'])
+    cnnModel = basicCNNModel((256, 256, 3))
+    mplModel = mplModel((68, 2))
 
+    midModel = multipleInputDataModel(mplModel, cnnModel)
+    model.compile(loss="mean_absolute_percentage_error", optimizer=Adam(lr=1e-3, decay=1e-3 / 200))
 
-    mplModel = mplModel(nFeaturePoints, 56)
-    mplModel.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learningRate), metrics=['accuracy'])
+    # model.fit(x=[trainAttrX, trainImagesX], y=trainY, validation_data=([testAttrX, testImagesX], testY), epochs=200, batch_size=8)
 
+    println('training model with mixed input on labeled data ')
 
-    println('training model on labeled data ')
-
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/labeled_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='./data/tensorBoard/labeled_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
 
     data_gen = generate_data_batches(files, batchSize, VALTrainingFactor)
 

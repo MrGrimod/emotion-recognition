@@ -23,7 +23,7 @@ def main():
 
     print('training model on raw unlabeld data \r')
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./storage/tensor_board/raw_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='data/tensorBoard/raw_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
 
     data_gen = generate_data_batches(files, batchSize, VALTrainingFactor)
 
