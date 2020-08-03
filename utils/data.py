@@ -9,21 +9,20 @@ from sklearn.model_selection import train_test_split
 
 def generate_data_batches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
-    val_training_factor = 0.7
+    # val_training_factor = 0.7
     i = 0
     while True:
         for filename in glob.iglob(files):
             i += 1
 
-            data = np.load(filename)
+            data = np.load(filename, allow_pickle=True)
 
-            dataX = np.array([i for i in data[0]])
-            dataX = dataX[0, :, :, :]
-            dataY = np.array([i for i in data[1]])
+            dataX = np.array(data[0][0])
+            dataY = np.array(data[1])
 
             for cbatch in range(0, dataX.shape[0], batch_size):
                 batch_x = dataX[cbatch:(cbatch + batch_size),:,:,:]
-                batch_y = dataY[cbatch:(cbatch + batch_size)]
+                batch_y = dataY[cbatch:(cbatch + batch_size), :]
 
                 batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
                 batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
@@ -38,15 +37,14 @@ def generate_val_data_batches(files, batch_size, val_training_factor):
         for filename in glob.iglob(files):
             i += 1
 
-            data = np.load(filename)
+            data = np.load(filename, allow_pickle=True)
 
-            data_x = np.array([i for i in data[0]])
-            data_x = data_x[0, :, :, :]
-            data_y = np.array([i for i in data[2]])
+            dataX = np.array(data[0][0])
+            dataY = np.array(data[1])
 
-            for cbatch in range(0, data_x.shape[0], batch_size):
-                batch_x = data_x[cbatch:(cbatch + batch_size),:,:,:]
-                batch_y = data_y[cbatch:(cbatch + batch_size)]
+            for cbatch in range(0, dataX.shape[0], batch_size):
+                batch_x = dataX[cbatch:(cbatch + batch_size),:,:,:]
+                batch_y = dataY[cbatch:(cbatch + batch_size), :]
 
                 batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
                 batch_y_training, batch_y_val = np.split(batch_y, [int(val_training_factor * len(batch_y))])
@@ -61,10 +59,10 @@ def get_data_metric(files, batch_size, val_training_factor):
     for filename in glob.iglob(files):
         i += 1
 
-        data = np.load(filename)
-        data_x = np.array([i for i in data[0]])
+        data = np.load(filename, allow_pickle=True)
+        dataX = np.array(data[0][0])     
 
-        for cbatch in range(0, data_x.shape[0], batch_size):
+        for cbatch in range(0, dataX.shape[0], batch_size):
             batch_count += 1
 
     train_batch_count = int(val_training_factor * batch_count)

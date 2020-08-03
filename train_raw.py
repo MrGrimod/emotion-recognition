@@ -6,13 +6,14 @@ from keras.optimizers import SGD
 from cnn_model.models import *
 from utils.data import *
 import calendar
+import random
 import time
 
 def main():
-    epochs = 50
-    batchSize = 5
+    epochs = 10
+    batchSize = 32
     VALTrainingFactor = 0.7
-    learningRate = 0.1
+    learningRate = 0.001
     dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
     files='data/raw/**'
 
@@ -33,8 +34,10 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    model.fit_generator(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
-    model.save_weights('storage/train_raw_weights.h5')
+    model.fit(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
+    randomId = str(random.randrange(500))
+    print('Model Id: ' + randomId)
+    model.save_weights('data/trainedModels/train_raw_weight_'+randomId+'.h5')
 
 if __name__ == "__main__":
     main()
