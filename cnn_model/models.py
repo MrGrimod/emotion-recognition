@@ -1,50 +1,54 @@
 from keras.models import Sequential
+from keras.models import Model
 from keras.layers import *
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Conv2D , MaxPooling2D, ZeroPadding2D
 from keras.optimizers import SGD
+
+import keras
 import cv2, numpy as np
 
-def multipleInputDataModel(mpl, cnn, nOutPut):
-    inputConcat = concatenate([mlp.output, cnn.output])
+def multipleInputDataModel(mplOut, cnnOut, mplIn, cnnIn, nOutPut):
+    inputConcat = keras.layers.Concatenate()([mplOut, cnnOut])
     x = Dense(nOutPut, activation="relu")(inputConcat)
     x = Dense(nOutPut, activation="linear")(x)
-    model = Model(inputs=[mlp.input, cnn.input], outputs=x)
+    model = Model(inputs=[mplIn, cnnIn], outputs=x)
 
     return model
     
 def mplModel(inputShape, nOutPut):
-    model = Sequential()
-    model.add(Dense(8, input_dim=inputShape, activation="relu"))
-    model.add(Dense(nOutPut, activation="relu"))
+    inputT = Input(shape=inputShape)
+    x = Dense(32, activation="relu")(inputT)
+    x = Flatten()(x)
+    x = Dense(nOutPut, activation="relu")(x)
 
-    return model
+    model = Model(inputs=inputT, outputs=x)
+
+    return inputT, x
 
 def basicCNNModel(inputShape, nOutPut):
-    model = Sequential()
+    inputT = Input(shape=inputShape)
 
     #1st convolution layer
-    model.add(Conv2D(64, (3, 3), activation='relu', input_shape=inputShape))
-    model.add(MaxPooling2D(pool_size=(5,5), strides=(2, 2)))
+    x = Conv2D(128, (3, 3), activation='relu', input_shape=inputShape)(inputT)
+    x = MaxPooling2D(pool_size=(5,5), strides=(2, 2))(x)
 
     #2nd convolution layer
-    model.add(Conv2D(40, (3, 3), activation='relu'))
-    model.add(Conv2D(40, (3, 3), activation='relu'))
-    model.add(AveragePooling2D(pool_size=(3,3), strides=(1, 1)))
+    x = Conv2D(256, (3, 3), activation='relu')(x)
+    x = Conv2D(256, (3, 3), activation='relu')(x)
+    x = AveragePooling2D(pool_size=(3,3), strides=(1, 1))(x)
 
     #3rd convolution layer
-    model.add(Conv2D(32, (3, 3), activation='relu'))
-    model.add(Conv2D(21, (3, 3), activation='relu'))
-    model.add(AveragePooling2D(pool_size=(3,3), strides=(1, 1)))
+    x = Conv2D(512, (3, 3), activation='relu')(x)
+    x = Conv2D(512, (3, 3), activation='relu')(x)
+    x = AveragePooling2D(pool_size=(3,3), strides=(1, 1))(x)
 
-    model.add(Flatten())
+    x = Flatten()(x)
 
     #fully connected neural networks
-    model.add(Dense(nOutPut, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(nOutPut, activation='relu'))
+    x = Dense(nOutPut, activation='relu')(x)
+    x = Dense(nOutPut, activation='relu')(x)
+    
+    model = Model(inputs=inputT, outputs=x)
 
-    # model.add(Dropout(0.2))
-    # model.add(Dense(output_s, activation='softmax'))
-
-    return model
+    return inputT, x

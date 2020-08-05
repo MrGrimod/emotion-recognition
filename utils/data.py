@@ -7,7 +7,7 @@ import glob
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
-def generate_data_batches(files, batch_size, val_training_factor):
+def generateDataBatches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
     # val_training_factor = 0.7
     i = 0
@@ -16,7 +16,6 @@ def generate_data_batches(files, batch_size, val_training_factor):
             i += 1
 
             data = np.load(filename, allow_pickle=True)
-
             dataX = np.array(data[0][0])
             dataY = np.array(data[1])
 
@@ -29,7 +28,7 @@ def generate_data_batches(files, batch_size, val_training_factor):
 
                 yield (batch_x_training, batch_y_training)
 
-def generate_val_data_batches(files, batch_size, val_training_factor):
+def generateValDataBatches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
     # val_training_factor = 0.7
     i = 0
@@ -40,7 +39,7 @@ def generate_val_data_batches(files, batch_size, val_training_factor):
             data = np.load(filename, allow_pickle=True)
 
             dataX = np.array(data[0][0])
-            dataY = np.array(data[1])
+            dataY = np.array(data[2])
 
             for cbatch in range(0, dataX.shape[0], batch_size):
                 batch_x = dataX[cbatch:(cbatch + batch_size),:,:,:]
@@ -52,7 +51,7 @@ def generate_val_data_batches(files, batch_size, val_training_factor):
                 yield (batch_x_val, batch_y_val)
 
 
-def get_data_metric(files, batch_size, val_training_factor):
+def getDataMetric(files, batch_size, val_training_factor):
     i = 0
     batch_count = 0
 
@@ -69,6 +68,56 @@ def get_data_metric(files, batch_size, val_training_factor):
     val_batch_count = batch_count - train_batch_count
 
     return train_batch_count, val_batch_count
+
+def generateMixedInputDataBatches(files, batch_size, val_training_factor):
+    # files = 'F:/emotions_detection/raw/**'
+    # val_training_factor = 0.7
+    i = 0
+    while True:
+        for filename in glob.iglob(files):
+            i += 1
+
+            data = np.load(filename, allow_pickle=True)
+
+            dataImageX = np.array(data[0][0])
+            dataImageMarkerX = np.array(data[1])
+            dataY = np.array(data[2])
+
+            for cbatch in range(0, dataX.shape[0], batch_size):
+                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
+                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
+                batchY = dataY[cbatch:(cbatch + batch_size), :]
+
+                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batch_x))])
+                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batch_x))])
+                batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
+
+                yield (batchImageXtraining, batchImageMarkerXtraining, batchYtraining)
+
+def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
+    # files = 'F:/emotions_detection/raw/**'
+    # val_training_factor = 0.7
+    i = 0
+    while True:
+        for filename in glob.iglob(files):
+            i += 1
+
+            data = np.load(filename, allow_pickle=True)
+
+            dataImageX = np.array(data[0][0])
+            dataImageMarkerX = np.array(data[1])
+            dataY = np.array(data[2])
+
+            for cbatch in range(0, dataX.shape[0], batch_size):
+                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
+                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
+                batchY = dataY[cbatch:(cbatch + batch_size), :]
+
+                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batch_x))])
+                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batch_x))])
+                batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
+
+                yield (batchImageXVal, batchImageMarkerXVal, batchYVal)
 
 def getClassesForDataSet(dataSetDir):
     classes = []

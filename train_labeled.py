@@ -1,4 +1,5 @@
 import keras
+import random
 from keras.layers import *
 from keras.models import Model
 from keras.regularizers import l2
@@ -14,31 +15,33 @@ def main():
     VALTrainingFactor = 0.7
     learningRate=0.1
     nFeaturePoints = 0 # todo
-    
+    dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
     files='data/labeled/**'
 
-    cnnModel = basicCNNModel((256, 256, 3))
-    mplModel = mplModel((68, 2))
+    classes = getClassesForDataSet(dataSetDir)
 
-    midModel = multipleInputDataModel(mplModel, cnnModel)
-    model.compile(loss="mean_absolute_percentage_error", optimizer=Adam(lr=1e-3, decay=1e-3 / 200))
+    cnnIn, cnnOutLayer = basicCNNModel((256, 256, 3), len(classes))
+    mplIn, mplOutLayer = mplModel((68, 2), len(classes))
 
-    # model.fit(x=[trainAttrX, trainImagesX], y=trainY, validation_data=([testAttrX, testImagesX], testY), epochs=200, batch_size=8)
+    midModel = multipleInputDataModel(mplOutLayer, cnnOutLayer, mplIn, cnnIn, len(classes))
+    midModel.compile(loss="mean_absolute_percentage_error", optimizer=Adam(lr=1e-3, decay=1e-3 / 200))
 
-    println('training model with mixed input on labeled data ')
+    print('training model with mixed input on labeled data ')
+    randomId = str(random.randrange(500))
+    print('Model Id: ' + randomId)
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='./data/tensorBoard/labeled_training_tb_'+str(learningRate)+'_'+str(calendar.timegm(time.gmtime())), histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='data/tensorBoard/labeled_training_tb_'+str(learningRate)+'_'+randomId, histogram_freq=0, write_graph=True, write_images=True)
 
-    data_gen = generate_data_batches(files, batchSize, VALTrainingFactor)
+    data_gen = generateMixedInputDataBatches(files, batchSize, VALTrainingFactor)
 
-    val_data_gen = generate_val_data_batches(files, batchSize, VALTrainingFactor)
+    val_data_gen = generateMixedInputValDataBatches(files, batchSize, VALTrainingFactor)
 
-    train_batch_count, val_batch_count = get_data_metric(files, batchSize, VALTrainingFactor)
+    train_batch_count, val_batch_count = getDataMetric(files, batchSize, VALTrainingFactor)
 
-    println('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
+    print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    model.fit_generator(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
-    model.save_weights('storage/train_labeled_weights.h5')
+    midModel.fit(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
+    midModel.save_weights('data/trainedModels/train_labeled_weights_'+randomId+'.h5')
 
 
 if __name__ == "__main__":
