@@ -43,18 +43,22 @@ def detectFeatures(dataX, files_chunk_size):
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('data/shape_predictor_68_face_landmarks.dat')
 
-    featurePoints = np.empty([files_chunk_size, 68, 2])
-    imgFeaturePoints = np.empty([68, 2])
+    featurePoints = np.zeros([files_chunk_size, 68, 2], int)
+    imgFeaturePoints = np.zeros([68, 2], int)
+    print(featurePoints.dtype)
     print('Detecting data - using DLib')
     for i in tqdm(range(len(dataX[0]))):
         img = dataX[0][i]
         rects = detector(img, 0)
         for (i, rect) in enumerate(rects):
             shape = predictor(img, rect)
-            shape = face_utils.shape_to_np(shape)
-            np.append(imgFeaturePoints, shape)
+            shape = np.array(face_utils.shape_to_np(shape), int)
+            print(shape.dtype)
+            print(np.append(imgFeaturePoints, shape).dtype)
+            break
         np.append(featurePoints, imgFeaturePoints)
-        imgFeaturePoints = np.empty([68, 2])
+        print(featurePoints)
+        imgFeaturePoints = np.zeros([68, 2])
         
     return np.array(featurePoints)
 

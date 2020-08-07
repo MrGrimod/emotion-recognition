@@ -11,10 +11,9 @@ import time
 
 def main():
     epochs = 50
-    batchSize = 15
+    batchSize = 32
     VALTrainingFactor = 0.7
-    learningRate=0.1
-    nFeaturePoints = 0 # todo
+    learningRate=0.00001
     dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
     files='data/labeled/**'
 
@@ -40,7 +39,7 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    midModel.fit(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
+    midModel.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
     midModel.save_weights('data/trainedModels/train_labeled_weights_'+randomId+'.h5')
 
 

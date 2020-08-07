@@ -83,16 +83,16 @@ def generateMixedInputDataBatches(files, batch_size, val_training_factor):
             dataImageMarkerX = np.array(data[1])
             dataY = np.array(data[2])
 
-            for cbatch in range(0, dataX.shape[0], batch_size):
+            for cbatch in range(0, dataImageX.shape[0], batch_size):
                 batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
                 batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
                 batchY = dataY[cbatch:(cbatch + batch_size), :]
 
-                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batch_x))])
-                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batch_x))])
-                batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
+                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batchImageX))])
+                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batchImageMarkerX))])
+                batchYtraining, batchYtrainingVal = np.split(batchY, [int(val_training_factor * len(batchY))])
 
-                yield (batchImageXtraining, batchImageMarkerXtraining, batchYtraining)
+                yield [batchImageMarkerXtraining, batchImageXtraining], batchYtraining
 
 def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
     # files = 'F:/emotions_detection/raw/**'
@@ -108,6 +108,9 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
             dataImageMarkerX = np.array(data[1])
             dataY = np.array(data[2])
 
+            print(dataY)
+            print(dataY.shape)
+
             for cbatch in range(0, dataX.shape[0], batch_size):
                 batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
                 batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
@@ -116,8 +119,7 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
                 batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batch_x))])
                 batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batch_x))])
                 batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
-
-                yield (batchImageXVal, batchImageMarkerXVal, batchYVal)
+                yield [batchImageMarkerXVal, batchImageXVal], batchYVal
 
 def getClassesForDataSet(dataSetDir):
     classes = []
