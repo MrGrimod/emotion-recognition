@@ -10,16 +10,15 @@ import cv2, numpy as np
 
 def multipleInputDataModel(mplOut, cnnOut, mplIn, cnnIn, nOutPut):
     inputConcat = keras.layers.Concatenate()([mplOut, cnnOut])
-    x = Dense(nOutPut, activation="relu")(inputConcat)
+    x = Dense(68, activation="relu")(inputConcat)
     x = Dense(nOutPut, activation="relu")(x)
-    x = Activation('softmax')(x)
     model = Model(inputs=[mplIn, cnnIn], outputs=x)
 
     return model
     
 def mplModel(inputShape, nOutPut):
     inputT = Input(shape=inputShape)
-    x = Dense(32, activation="relu")(inputT)
+    x = Dense(68, activation="relu")(inputT)
     x = Flatten()(x)
     x = Dense(nOutPut, activation="relu")(x)
 

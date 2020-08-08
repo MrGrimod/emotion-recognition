@@ -91,7 +91,6 @@ def generateMixedInputDataBatches(files, batch_size, val_training_factor):
                 batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batchImageX))])
                 batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batchImageMarkerX))])
                 batchYtraining, batchYtrainingVal = np.split(batchY, [int(val_training_factor * len(batchY))])
-
                 yield [batchImageMarkerXtraining, batchImageXtraining], batchYtraining
 
 def generateMixedInputValDataBatches(files, batch_size, val_training_factor):

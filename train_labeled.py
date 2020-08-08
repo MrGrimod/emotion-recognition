@@ -11,9 +11,9 @@ import time
 
 def main():
     epochs = 50
-    batchSize = 32
+    batchSize = 10
     VALTrainingFactor = 0.7
-    learningRate=0.00001
+    learningRate=0.001
     dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
     files='data/labeled/**'
 
