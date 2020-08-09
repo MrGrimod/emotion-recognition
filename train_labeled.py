@@ -14,12 +14,15 @@ def main():
     batchSize = 10
     VALTrainingFactor = 0.7
     learningRate=0.001
-    dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
-    files='data/labeled/**'
+    dataSetDir = 'data/MPI_selected/**'
+    files='data/labeled_MPI_selected/**'
 
     classes = getClassesForDataSet(dataSetDir)
 
-    cnnIn, cnnOutLayer = basicCNNModel((256, 256, 3), len(classes))
+    classesWhitelist = ['happy_laughing','fear_terror']
+
+    # cnnIn, cnnOutLayer = basicCNNModel((256, 256, 3), len(classes))
+    cnnIn, cnnOutLayer = VGG16(input_shape=(256, 256, 3), classes=len(classes))
     mplIn, mplOutLayer = mplModel((68, 2), len(classes))
 
     midModel = multipleInputDataModel(mplOutLayer, cnnOutLayer, mplIn, cnnIn, len(classes))

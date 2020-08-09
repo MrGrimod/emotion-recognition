@@ -13,7 +13,7 @@ from utils.data import *
 
 
 def main():
-    dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
+    dataSetDir = 'data/MPI_selected/**'
     files_chunk_size = 60
     i = 0
     c = 0
@@ -48,7 +48,7 @@ def main():
                 
                 x_final, y_final = label_categorisation(x, y, classes)
 
-                file_loc = 'data/raw/'+str(c)+'.npy'
+                file_loc = 'data/raw_MPI_selected/'+str(c)+'.npy'
                 if not x_final.shape[0] <= 1:
 
                     data = np.array([[x_final], y_final])

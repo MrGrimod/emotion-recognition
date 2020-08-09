@@ -8,8 +8,6 @@ from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
 def generateDataBatches(files, batch_size, val_training_factor):
-    # files = 'F:/emotions_detection/raw/**'
-    # val_training_factor = 0.7
     i = 0
     while True:
         for filename in glob.iglob(files):
@@ -29,8 +27,6 @@ def generateDataBatches(files, batch_size, val_training_factor):
                 yield (batch_x_training, batch_y_training)
 
 def generateValDataBatches(files, batch_size, val_training_factor):
-    # files = 'F:/emotions_detection/raw/**'
-    # val_training_factor = 0.7
     i = 0
     while True:
         for filename in glob.iglob(files):
@@ -70,8 +66,6 @@ def getDataMetric(files, batch_size, val_training_factor):
     return train_batch_count, val_batch_count
 
 def generateMixedInputDataBatches(files, batch_size, val_training_factor):
-    # files = 'F:/emotions_detection/raw/**'
-    # val_training_factor = 0.7
     i = 0
     while True:
         for filename in glob.iglob(files):
@@ -94,8 +88,6 @@ def generateMixedInputDataBatches(files, batch_size, val_training_factor):
                 yield [batchImageMarkerXtraining, batchImageXtraining], batchYtraining
 
 def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
-    # files = 'F:/emotions_detection/raw/**'
-    # val_training_factor = 0.7
     i = 0
     while True:
         for filename in glob.iglob(files):
@@ -107,16 +99,13 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
             dataImageMarkerX = np.array(data[1])
             dataY = np.array(data[2])
 
-            print(dataY)
-            print(dataY.shape)
-
-            for cbatch in range(0, dataX.shape[0], batch_size):
+            for cbatch in range(0, dataImageX.shape[0], batch_size):
                 batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
                 batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
                 batchY = dataY[cbatch:(cbatch + batch_size), :]
 
-                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batch_x))])
-                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batch_x))])
+                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(dataImageX))])
+                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(dataImageX))])
                 batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
                 yield [batchImageMarkerXVal, batchImageXVal], batchYVal
 

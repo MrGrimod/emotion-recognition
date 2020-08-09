@@ -13,7 +13,7 @@ def main():
     files_chunk_size = 60
     
     i = 0
-    for filename in glob.iglob('data/raw/**'):
+    for filename in glob.iglob('data/raw_MPI_selected/**'):
         i += 1
 
         print(filename)
@@ -35,7 +35,7 @@ def main():
 
         finalData = np.array([dataX, featurePoints, dataY])
 
-        np.save('data/labeled/'+str(i)+'.npy', finalData)
+        np.save('data/labeled_MPI_selected/'+str(i)+'.npy', finalData)
 
 
 def detectFeatures(dataX, files_chunk_size):
