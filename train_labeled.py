@@ -21,8 +21,8 @@ def main():
 
     classesWhitelist = ['happy_laughing','fear_terror']
 
-    # cnnIn, cnnOutLayer = basicCNNModel((256, 256, 3), len(classes))
-    cnnIn, cnnOutLayer = VGG16(input_shape=(256, 256, 3), classes=len(classes))
+    # cnnIn, cnnOutLayer = basicCNNModel((256, 256), len(classes))
+    cnnIn, cnnOutLayer = VGG16(input_shape=(48, 48, 1), classes=len(classes), nOutPut=len(classes))
     mplIn, mplOutLayer = mplModel((68, 2), len(classes))
 
     midModel = multipleInputDataModel(mplOutLayer, cnnOutLayer, mplIn, cnnIn, len(classes))

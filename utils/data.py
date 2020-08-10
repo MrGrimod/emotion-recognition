@@ -18,7 +18,7 @@ def generateDataBatches(files, batch_size, val_training_factor):
             dataY = np.array(data[1])
 
             for cbatch in range(0, dataX.shape[0], batch_size):
-                batch_x = dataX[cbatch:(cbatch + batch_size),:,:,:]
+                batch_x = dataX[cbatch:(cbatch + batch_size),:,:]
                 batch_y = dataY[cbatch:(cbatch + batch_size), :]
 
                 batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
@@ -38,7 +38,7 @@ def generateValDataBatches(files, batch_size, val_training_factor):
             dataY = np.array(data[2])
 
             for cbatch in range(0, dataX.shape[0], batch_size):
-                batch_x = dataX[cbatch:(cbatch + batch_size),:,:,:]
+                batch_x = dataX[cbatch:(cbatch + batch_size),:,:]
                 batch_y = dataY[cbatch:(cbatch + batch_size), :]
 
                 batch_x_training, batch_x_val = np.split(batch_x, [int(val_training_factor * len(batch_x))])
@@ -78,8 +78,8 @@ def generateMixedInputDataBatches(files, batch_size, val_training_factor):
             dataY = np.array(data[2])
 
             for cbatch in range(0, dataImageX.shape[0], batch_size):
-                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
-                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
+                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:]
+                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:]
                 batchY = dataY[cbatch:(cbatch + batch_size), :]
 
                 batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batchImageX))])
@@ -99,15 +99,18 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
             dataImageMarkerX = np.array(data[1])
             dataY = np.array(data[2])
 
-            for cbatch in range(0, dataImageX.shape[0], batch_size):
-                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:,:]
-                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:,:]
-                batchY = dataY[cbatch:(cbatch + batch_size), :]
+            for cbatch in range(dataImageX.shape[0]):
+                batchImageX = dataImageX[cbatch,:,:]
+                batchImageMarkerX = dataImageMarkerX[cbatch,:]
+                batchY = dataY[cbatch, :]
 
                 batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(dataImageX))])
                 batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(dataImageX))])
-                batchYtraining, batchYtrainingVal = np.split(batch_y, [int(val_training_factor * len(batch_y))])
-                yield [batchImageMarkerXVal, batchImageXVal], batchYVal
+                batchYtraining, batchYtrainingVal = np.split(batchY, [int(val_training_factor * len(batchY))])
+                print(batchImageMarkerXtrainingVal.shape)
+                print(batchImageXtrainingVal.shape)
+                print(batchYtrainingVal.shape)
+                yield [batchImageMarkerXtrainingVal, batchImageXtrainingVal], batchYtrainingVal
 
 def getClassesForDataSet(dataSetDir):
     classes = []
