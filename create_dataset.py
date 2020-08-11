@@ -62,18 +62,5 @@ def main():
                 x = []
                 y = []
 
-def detect_face(img, detector, predictor):
-    rects = detector(img, 0)
-    roi_color = []
-    for (i, rect) in enumerate(rects):
-        shape = predictor(img, rect)
-        shape = face_utils.shape_to_np(shape)
-
-        (x, y, w, h) = face_utils.rect_to_bb(rect)
-
-        roi_color = img[y:y+h, x:x+w]
-
-    return roi_color
-
 if __name__ == '__main__':
     main()

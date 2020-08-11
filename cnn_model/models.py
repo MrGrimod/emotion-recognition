@@ -67,7 +67,7 @@ def basicCNNModel(inputShape, nOutPut):
     return inputT, x
 
 
-def VGG16(input_shape, classes, nOutPut):
+def VGG16(input_shape, nOutPut):
     
     inputs = layers.Input(shape=input_shape)
         

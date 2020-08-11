@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import cv2
 import glob
+from imutils import face_utils
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
@@ -99,18 +100,17 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
             dataImageMarkerX = np.array(data[1])
             dataY = np.array(data[2])
 
-            for cbatch in range(dataImageX.shape[0]):
-                batchImageX = dataImageX[cbatch,:,:]
-                batchImageMarkerX = dataImageMarkerX[cbatch,:]
-                batchY = dataY[cbatch, :]
+            for cbatch in range(0, dataImageX.shape[0], batch_size):
+                batchImageX = dataImageX[cbatch:(cbatch + batch_size),:,:]
+                batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:]
+                batchY = dataY[cbatch:(cbatch + batch_size), :]
 
                 batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(dataImageX))])
                 batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(dataImageX))])
                 batchYtraining, batchYtrainingVal = np.split(batchY, [int(val_training_factor * len(batchY))])
-                print(batchImageMarkerXtrainingVal.shape)
-                print(batchImageXtrainingVal.shape)
-                print(batchYtrainingVal.shape)
-                yield [batchImageMarkerXtrainingVal, batchImageXtrainingVal], batchYtrainingVal
+
+                for val in range(len(batchImageXtrainingVal)):
+                    yield [batchImageMarkerXtrainingVal[val], batchImageXtrainingVal[val]], batchYtrainingVal[val]
 
 def getClassesForDataSet(dataSetDir):
     classes = []
@@ -143,3 +143,16 @@ def label_categorisation(data_x, data_y, classes):
     x_final = np.array(x_final)
 
     return x_final, y_final
+
+def detect_face(img, detector, predictor):
+    rects = detector(img, 0)
+    roi_color = []
+    for (i, rect) in enumerate(rects):
+        shape = predictor(img, rect)
+        shape = face_utils.shape_to_np(shape)
+
+        (x, y, w, h) = face_utils.rect_to_bb(rect)
+
+        roi_color = img[y:y+h, x:x+w]
+
+    return roi_color

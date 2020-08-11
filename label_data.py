@@ -39,7 +39,6 @@ def main():
 
 
 def detectFeatures(dataX, files_chunk_size):
-
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('data/shape_predictor_68_face_landmarks.dat')
 
