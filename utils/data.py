@@ -16,7 +16,7 @@ def generateDataBatches(files, batch_size, val_training_factor):
 
             data = np.load(filename, allow_pickle=True)
             dataX = np.array(data[0][0])
-            dataY = np.array(data[1])
+            dataY = np.array(data[2])
 
             for cbatch in range(0, dataX.shape[0], batch_size):
                 batch_x = dataX[cbatch:(cbatch + batch_size),:,:]
@@ -105,12 +105,11 @@ def generateMixedInputValDataBatches(files, batch_size, val_training_factor):
                 batchImageMarkerX = dataImageMarkerX[cbatch:(cbatch + batch_size),:]
                 batchY = dataY[cbatch:(cbatch + batch_size), :]
 
-                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(dataImageX))])
-                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(dataImageX))])
+                batchImageXtraining, batchImageXtrainingVal = np.split(batchImageX, [int(val_training_factor * len(batchImageX))])
+                batchImageMarkerXtraining, batchImageMarkerXtrainingVal = np.split(batchImageMarkerX, [int(val_training_factor * len(batchImageMarkerX))])
                 batchYtraining, batchYtrainingVal = np.split(batchY, [int(val_training_factor * len(batchY))])
 
-                for val in range(len(batchImageXtrainingVal)):
-                    yield [batchImageMarkerXtrainingVal[val], batchImageXtrainingVal[val]], batchYtrainingVal[val]
+                yield [batchImageMarkerXtrainingVal, batchImageXtrainingVal], batchYtrainingVal
 
 def getClassesForDataSet(dataSetDir):
     classes = []
@@ -128,6 +127,15 @@ def getClassesForDataSet(dataSetDir):
     classes.sort()
 
     return classes
+
+def getPredictionTestSample(batchSize):
+    data = np.load("data/labeled_MPI_selected/4.npy", allow_pickle=True)
+
+    dataImageX = np.array(data[0][0])
+    dataImageMarkerX = np.array(data[1])
+    dataY = np.array(data[2])
+    
+    return dataImageX[0:batchSize], dataImageMarkerX[0:batchSize], dataY[0:batchSize]
 
 def label_categorisation(data_x, data_y, classes):
     y_final = []

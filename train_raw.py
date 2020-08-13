@@ -14,16 +14,16 @@ def main():
     batchSize = 32
     VALTrainingFactor = 0.7
     learningRate = 0.001
-    dataSetDir = 'data/MPI_large_centralcam_hi_islf_complete/**'
-    files='data/raw/**'
+    dataSetDir = 'data/MPI_selected/**'
+    files='data/labeled_MPI_selected/**'
 
     classes = getClassesForDataSet(dataSetDir)
 
-    cnnIn, cnnOut = basicCNNModel((256, 256, 3), len(classes))
+    cnnIn, cnnOut = VGG16(input_shape=(48, 48, 1), nOutPut=len(classes))
     model = Model(inputs=cnnIn, outputs=cnnOut)
     model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(lr=learningRate), metrics=['accuracy'])
 
-    print('training model on raw unlabeld data \r')
+    print('training model on raw unmarked data \r')
     randomId = str(random.randrange(500))
     print('Model Id: ' + randomId)
 
@@ -37,7 +37,7 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    model.fit(data_gen, validation_data=val_data_gen, shuffle=True, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
+    model.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
     
     model.save_weights('data/trainedModels/train_raw_weight_'+randomId+'.h5')
 

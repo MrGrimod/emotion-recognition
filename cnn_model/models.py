@@ -24,7 +24,7 @@ import cv2, numpy as np
 def multipleInputDataModel(mplOut, cnnOut, mplIn, cnnIn, nOutPut):
     inputConcat = keras.layers.Concatenate()([mplOut, cnnOut])
     x = Dense(68, activation="relu")(inputConcat)
-    x = Dense(nOutPut, activation="relu")(x)
+    x = Dense(nOutPut, activation="softmax")(x)
     model = Model(inputs=[mplIn, cnnIn], outputs=x)
 
     return model
@@ -33,7 +33,7 @@ def mplModel(inputShape, nOutPut):
     inputT = Input(shape=inputShape)
     x = Dense(68, activation="relu")(inputT)
     x = Flatten()(x)
-    x = Dense(nOutPut, activation="relu")(x)
+    x = Dense(nOutPut, activation="softmax")(x)
 
     # model = Model(inputs=inputT, outputs=x)
 
@@ -108,7 +108,7 @@ def VGG16(input_shape, nOutPut):
 
     x = layers.Dense(64, activation='relu', name='fc1')(x)
     x = layers.Dense(64, activation='relu', name='fc2')(x)
-    x = layers.Dense(nOutPut, activation='relu', name='fc3')(x)
+    x = layers.Dense(nOutPut, activation='softmax', name='fc3')(x)
     
     # x = layers.Dense(classes, activation='softmax', name='predictions')(x)
 

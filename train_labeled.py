@@ -10,16 +10,15 @@ import calendar
 import time
 
 def main():
-    epochs = 10
+    epochs = 100
     batchSize = 32
     VALTrainingFactor = 0.7
-    learningRate=0.1
+    learningRate=0.001
     dataSetDir = 'data/MPI_selected/**'
     files='data/labeled_MPI_selected/**'
 
     classes = getClassesForDataSet(dataSetDir)
 
-    # cnnIn, cnnOutLayer = basicCNNModel((256, 256), len(classes))
     cnnIn, cnnOutLayer = VGG16(input_shape=(48, 48, 1), nOutPut=len(classes))
     mplIn, mplOutLayer = mplModel((68, 2), len(classes))
 
@@ -40,9 +39,20 @@ def main():
 
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
-    midModel.fit(data_gen, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
+    midModel.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
     midModel.save_weights('data/trainedModels/train_labeled_weights_'+randomId+'.h5')
 
+    ImageX, ImageMarkerX, batchY = getPredictionTestSample(batchSize)
+    prediction = midModel.predict([ImageMarkerX, ImageX])
+
+    for i in range(len(prediction[0])):
+        print(classes[i] + ': ' + str(prediction[0][i]))
+
+    print("---------------")
+
+    for i in range(len(batchY)):
+        print(str(classes[np.argmax(batchY[i])]))
+        break
 
 if __name__ == "__main__":
     main()

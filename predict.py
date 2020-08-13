@@ -37,12 +37,13 @@ def main():
 
     midModel = multipleInputDataModel(mplOutLayer, cnnOutLayer, mplIn, cnnIn, len(classes))
 
-    midModel.load_weights('data/trainedModels/train_labeled_weights_49.h5')
+    midModel.load_weights('data/trainedModels/train_labeled_weights_337.h5')
 
     prediction = midModel.predict(img)
 
     for i in range(len(prediction[0])):
         print(classes[i] + ': ' + str(prediction[0][i]))
+    
 
 if __name__ == "__main__":
     main()
