@@ -10,7 +10,7 @@ import random
 import time
 
 def main():
-    epochs = 10
+    epochs = 100
     batchSize = 32
     VALTrainingFactor = 0.7
     learningRate = 0.001
@@ -40,6 +40,20 @@ def main():
     model.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
     
     model.save_weights('data/trainedModels/train_raw_weight_'+randomId+'.h5')
+
+    ImageX, ImageMarkerX, batchY = getPredictionTestSample(batchSize)
+    prediction = model.predict([ImageX])
+
+    for i in range(len(prediction[0])):
+        print(classes[i] + ': ' + str(prediction[0][i]))
+
+    print("-------highest propability--------")
+    print(str(classes[np.argmax(prediction[0])]))
+    print("-------sample class--------")
+    for i in range(len(batchY)):
+        print(str(classes[np.argmax(batchY[i])]))
+        break
+
 
 if __name__ == "__main__":
     main()

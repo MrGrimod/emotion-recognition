@@ -23,7 +23,7 @@ def main():
     mplIn, mplOutLayer = mplModel((68, 2), len(classes))
 
     midModel = multipleInputDataModel(mplOutLayer, cnnOutLayer, mplIn, cnnIn, len(classes))
-    midModel.compile(loss="mean_absolute_percentage_error", optimizer=Adam(lr=learningRate, decay=1e-3 / 200))
+    midModel.compile(loss='categorical_crossentropy', optimizer=Adam(lr=learningRate), metrics=['accuracy'])
 
     print('training model with mixed input on labeled data ')
     randomId = str(random.randrange(500))
@@ -47,9 +47,9 @@ def main():
 
     for i in range(len(prediction[0])):
         print(classes[i] + ': ' + str(prediction[0][i]))
-
-    print("---------------")
-
+    print("-------highest propability--------")
+    print(str(classes[np.argmax(prediction[0])]))
+    print("-------sample class--------")
     for i in range(len(batchY)):
         print(str(classes[np.argmax(batchY[i])]))
         break

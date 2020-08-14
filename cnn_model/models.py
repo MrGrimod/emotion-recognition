@@ -31,7 +31,7 @@ def multipleInputDataModel(mplOut, cnnOut, mplIn, cnnIn, nOutPut):
     
 def mplModel(inputShape, nOutPut):
     inputT = Input(shape=inputShape)
-    x = Dense(68, activation="relu")(inputT)
+    x = Dense(nOutPut, activation="relu")(inputT)
     x = Flatten()(x)
     x = Dense(nOutPut, activation="softmax")(x)
 
@@ -108,11 +108,7 @@ def VGG16(input_shape, nOutPut):
 
     x = layers.Dense(64, activation='relu', name='fc1')(x)
     x = layers.Dense(64, activation='relu', name='fc2')(x)
-    x = layers.Dense(nOutPut, activation='softmax', name='fc3')(x)
-    
-    # x = layers.Dense(classes, activation='softmax', name='predictions')(x)
-
-    # Create model.
-    # model = models.Model(inputs, x, name='vgg16')
+    x = layers.Dense(nOutPut, activation='relu', name='fc3')(x)
+    x = layers.Dense(nOutPut, activation='softmax', name='fc4')(x)
 
     return inputs, x 
