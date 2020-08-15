@@ -11,11 +11,11 @@ import time
 
 def main():
     epochs = 100
-    batchSize = 32
+    batchSize = 16
     VALTrainingFactor = 0.7
     learningRate=0.001
-    dataSetDir = 'data/MPI_selected/**'
-    files='data/labeled_MPI_selected/**'
+    dataSetDir = 'data/MPI_simplified/**'
+    files='data/labeled_MPI_simplified/**'
 
     classes = getClassesForDataSet(dataSetDir)
 
@@ -29,7 +29,7 @@ def main():
     randomId = str(random.randrange(500))
     print('Model Id: ' + randomId)
 
-    tbCallBack = keras.callbacks.TensorBoard(log_dir='data/tensorBoard/labeled_training_tb_'+str(learningRate)+'_'+randomId, histogram_freq=0, write_graph=True, write_images=True)
+    tbCallBack = keras.callbacks.TensorBoard(log_dir='data/tensorBoard/model_'+randomId, histogram_freq=0, write_graph=True, write_images=True)
 
     data_gen = generateMixedInputDataBatches(files, batchSize, VALTrainingFactor)
 
@@ -40,7 +40,7 @@ def main():
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
     midModel.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
-    midModel.save_weights('data/trainedModels/train_labeled_weights_'+randomId+'.h5')
+    midModel.save_weights('data/trainedModels/model_'+randomId+'.h5')
 
     ImageX, ImageMarkerX, batchY = getPredictionTestSample(batchSize)
     prediction = midModel.predict([ImageMarkerX, ImageX])
@@ -50,9 +50,7 @@ def main():
     print("-------highest propability--------")
     print(str(classes[np.argmax(prediction[0])]))
     print("-------sample class--------")
-    for i in range(len(batchY)):
-        print(str(classes[np.argmax(batchY[i])]))
-        break
+    print(classes[np.argmax(batchY)])
 
 if __name__ == "__main__":
     main()
