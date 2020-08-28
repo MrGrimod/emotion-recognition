@@ -39,7 +39,7 @@ def main():
 
     model.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
     
-    model.save_weights('data/trainedModels/model_'+randomId+'.h5')
+    model.save('data/trainedModels/model_'+randomId+'.h5')
 
     ImageX, ImageMarkerX, batchY = getPredictionTestSample(batchSize)
     prediction = model.predict([ImageX])

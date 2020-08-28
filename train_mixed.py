@@ -10,7 +10,7 @@ import calendar
 import time
 
 def main():
-    epochs = 100
+    epochs = 10
     batchSize = 16
     VALTrainingFactor = 0.7
     learningRate=0.001
@@ -40,7 +40,7 @@ def main():
     print('train_batch_count, val_batch_count: ', train_batch_count,', ', val_batch_count)
 
     midModel.fit(data_gen, validation_data=val_data_gen, validation_steps=val_batch_count, steps_per_epoch=train_batch_count, epochs=epochs, verbose=1, callbacks=[tbCallBack])
-    midModel.save_weights('data/trainedModels/model_'+randomId+'.h5')
+    midModel.save('data/trainedModels/model_'+randomId+'.h5')
 
     ImageX, ImageMarkerX, batchY = getPredictionTestSample(batchSize)
     prediction = midModel.predict([ImageMarkerX, ImageX])
